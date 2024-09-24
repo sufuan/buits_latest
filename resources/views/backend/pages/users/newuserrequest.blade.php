@@ -37,9 +37,7 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
-                                @foreach($user->roles as $role)
-                                    <span class="badge badge-info">{{ $role->name }}</span>
-                                @endforeach
+                               5
                             </td>
                             <td>{{ $user->created_at->format('d M Y') }}</td>
                             <td>
@@ -62,22 +60,23 @@
 <script>
     $(document).ready(function() {
         $('.approve-switch').on('change', function() {
-            var userId = $(this).data('id');
-            $.ajax({
-                url: `{{ route("admin.users.approve", ":userId") }}`.replace(':userId', userId),
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                },
-                success: function(response) {
-                    alert('User approved successfully!');
-                    location.reload();  // Reload the page to reflect changes
-                },
-                error: function(xhr) {
-                    alert('An error occurred while approving the user.');
-                }
-            });
-        });
+    var userId = $(this).data('id');  // Retrieve the user's ID
+    $.ajax({
+        url: `{{ route("admin.users.approve", ":userId") }}`.replace(':userId', userId),
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+        },
+        success: function(response) {
+            alert('User approved successfully!');
+            location.reload();  // Reload the page to reflect changes
+        },
+        error: function(xhr) {
+            alert('An error occurred while approving the user.');
+        }
+    });
+});
+
     });
 </script>
 @endsection

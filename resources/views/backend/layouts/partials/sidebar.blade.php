@@ -3,6 +3,8 @@ $usr = Auth::guard('admin')->user();
 @endphp
 <nav class=" sidenav shadow-right sidenav-dark">
     <div class="sidenav-menu">
+
+
         <div class="nav accordion" id="accordionSidenav">
             <!-- Sidenav Menu Heading (Account)-->
             <!-- * * Note: * * Visible only on and above the sm breakpoint-->
@@ -21,6 +23,13 @@ $usr = Auth::guard('admin')->user();
                 Messages
                 <span class="badge bg-success-soft text-success ms-auto">2 New!</span>
             </a>
+
+
+
+
+
+
+
 
             <!-- Sidenav Menu Heading (Roles)-->
             @if ($usr->can('role.create') || $usr->can('role.view') || $usr->can('role.edit') || $usr->can('role.delete'))
@@ -47,6 +56,11 @@ $usr = Auth::guard('admin')->user();
             </div>
             @endif
 
+
+
+
+
+
             <!-- Sidenav Menu Heading (User)-->
             @if ($usr->can('user.create') || $usr->can('user.view') || $usr->can('user.edit') || $usr->can('user.delete'))
             <div class="sidenav-menu-heading">User</div>
@@ -66,6 +80,11 @@ $usr = Auth::guard('admin')->user();
                     @if ($usr->can('user.create'))
                     <a class="nav-link {{ Route::is('admin.users.create') ? 'active' : '' }}" href="{{ route('admin.users.create') }}">
                         Create User
+                    </a>
+                    @endif
+                    @if ($usr->can('user.approve'))
+                    <a class="nav-link {{ Route::is('admin.users.approvallist') ? 'active' : '' }}" href="{{ route('admin.users.approvallist') }}">
+                        New User Request
                     </a>
                     @endif
                 </nav>

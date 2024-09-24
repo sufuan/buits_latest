@@ -99,7 +99,7 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 Route::group(['prefix' => 'admin'], function () {
 Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
-Route::post('/users/new/{user}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
+Route::post('/users/new/{id}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
     Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
     Route::resource('roles', 'Backend\RolesController', ['names' => 'admin.roles']);
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);

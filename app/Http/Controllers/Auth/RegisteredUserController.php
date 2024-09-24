@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\PendingUser;
 use App\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -60,7 +61,7 @@ class RegisteredUserController extends Controller
         // $request->validate([...]);
 
         // Create the user with standard attributes and custom form data
-        $user = User::create([
+        PendingUser::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -79,10 +80,6 @@ class RegisteredUserController extends Controller
             'custom-form' => json_encode($customFormData) // Save custom form data as JSON
         ]);
 
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('dashboard'));
+        return redirect()->route('login')->with('status', 'Registration successful! Please wait for approval.');
     }
 }
