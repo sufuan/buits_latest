@@ -23,4 +23,21 @@ class SettingController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+
+    public function frontend()
+    {
+        $setting = Setting::firstOrCreate([]);
+        return view('backend.pages.settings.frontend');
+    }
+
+    // // Handle the AJAX toggle
+    // public function toggleVolunteerStatus(Request $request)
+    // {
+    //     $setting = Setting::first();
+    //     $setting->volunteer_application_enabled = $request->input('volunteer_application_enabled');
+    //     $setting->save();
+
+    //     return response()->json(['success' => true]);
+    // }
 }

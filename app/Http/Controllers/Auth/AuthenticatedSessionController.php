@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers\Auth;
 
@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -24,10 +25,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Attempt to authenticate the user
         $request->authenticate();
 
+        // Find the user by their email
+        $user = \App\User::where('email', $request->email)->first();
+
+        // Check if the user is approved
+        if (!$user->is_approved) {
+            Auth::logout();  // Log out the user if they are not approved
+            throw ValidationException::withMessages([
+                'email' => __('Your account is not approved yet. Please wait for approval.'),
+            ]);
+        }
+
+        // Regenerate the session to protect against session fixation
         $request->session()->regenerate();
 
+        // Redirect to the intended route after successful login
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

@@ -37,7 +37,8 @@ class User extends Authenticatable
         'image',
         'skills',
         'transaction_id',
-        'custom-form'
+        'custom-form',
+        'is_approved',
     ];
 
 

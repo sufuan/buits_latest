@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\EventsController;
 use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\UserApprovalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FormsController;
@@ -97,11 +98,17 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 Route::group(['prefix' => 'admin'], function () {
+Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
+Route::post('/users/new/{user}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
     Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
     Route::resource('roles', 'Backend\RolesController', ['names' => 'admin.roles']);
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
 
+
+
+
+//  user approval
 
 
 
