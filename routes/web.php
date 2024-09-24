@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\EventsController;
+use App\Http\Controllers\Backend\SettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FormsController;
@@ -12,6 +13,9 @@ use App\Http\Controllers\frontend\EventsControllerFrontent;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/admin/volunteer-status', [App\Http\Controllers\Backend\SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
+
 
 Route::get('/banner', function () {
 
@@ -193,8 +197,19 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
+    //   setting 
+
+    // Volunteer Settings route
+    Route::get('/settings/volunteer', [SettingController::class, 'volunteer'])->name('admin.settings.volunteer');
+
+    // Frontend CMS Settings route
+    Route::get('/settings/frontend', [SettingController::class, 'frontend'])->name('admin.settings.frontend');
 
 
+
+
+
+    Route::post('/admin/volunteer-status', [App\Http\Controllers\Backend\SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
 
 
 

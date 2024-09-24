@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Setting;
+
 
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -8,10 +10,27 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+
+
+    public function showVolunteerApplication()
+    {
+        // Fetch the first setting
+        $setting = Setting::first();
+    
+        return view('volunteer.application', compact('setting'));
+    }
+    
+
+
     public function index()
     {
+
+
+        $setting = Setting::first();
+
+
         $posts = Auth::user()->posts;
-        return view('dashboard', compact('posts'));
+        return view('dashboard', compact('posts', 'setting'));
     }
 
     public function storeDefault()

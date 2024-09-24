@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,8 +11,19 @@ class VolunteerController extends Controller
 {
     public function showRegisterForm()
     {
+        // Fetch the first setting
+        $setting = Setting::first();
+    
+        // Check if volunteer application is disabled
+        if (!$setting->volunteer_application_enabled) {
+            // Redirect to the 'closed' view if the application is closed
+            return view('volunteer.registrationClosed');
+        }
+    
+        // Proceed to the registration form if enabled
         return view('volunteer.register');
     }
+    
 
     public function register(Request $request)
     {

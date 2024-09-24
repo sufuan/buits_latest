@@ -18,7 +18,7 @@
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    @yield('head')
+    <!-- @yield('head') -->
 </head>
 
 <body>

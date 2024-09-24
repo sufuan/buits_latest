@@ -197,6 +197,30 @@ $usr = Auth::guard('admin')->user();
             @endif
 
 
+
+
+            <!-- Sidenav Menu Heading (Settings) -->
+            <div class="sidenav-menu-heading">Settings</div>
+            <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings">
+                <div class="nav-link-icon"><i data-feather="settings"></i></div>
+                Settings
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse" id="collapseSettings" data-bs-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav">
+                    <!-- Link for Volunteer settings -->
+                    <a class="nav-link {{ Route::is('admin.settings.volunteer') ? 'active' : '' }}" href="{{ route('admin.settings.volunteer') }}">
+                        Volunteer Settings
+                    </a>
+
+                    <!-- Link for Frontend CMS settings -->
+                    <a class="nav-link {{ Route::is('admin.settings.frontend') ? 'active' : '' }}" href="{{ route('admin.settings.frontend') }}">
+                        Frontend CMS Settings
+                    </a>
+                </nav>
+            </div>
+
+
             <!-- Sidenav Heading (Plugins)-->
             <div class="sidenav-menu-heading">Plugins</div>
             <!-- Sidenav Link (Charts)-->
