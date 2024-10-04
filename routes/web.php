@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\EventsController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\UserApprovalController;
+use App\Http\Controllers\Backend\UsersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FormsController;
@@ -15,7 +16,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/admin/volunteer-status', [App\Http\Controllers\Backend\SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
+// Route::post('/admin/volunteer-status', [App\Http\Controllers\Backend\SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
 
 
 Route::get('/banner', function () {
@@ -98,17 +99,46 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 Route::group(['prefix' => 'admin'], function () {
-Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
-Route::post('/users/new/{id}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
-    Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
-    Route::resource('roles', 'Backend\RolesController', ['names' => 'admin.roles']);
+    Route::resource('admins', 'Backend\AdminsController');
+    Route::post('admins/assignRole', 'Backend\AdminsController@assignRole')->name('admin.admins.assignRole');
+    Route::get('getUsersByType', 'Backend\AdminsController@getUsersByType')->name('admin.getUsersByType');
+
+
+
+    Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
+    Route::post('users/bulk-import', 'Backend\UsersController@import')->name('admin.users.import');
+    Route::get('/users/export', 'Backend\UsersController@export')->name('admin.users.export');
+
+
+
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
+    Route::get('userlistjson', 'Backend\UsersController@userlist')->name('admin.users.userlistjson');
+    Route::post('users/import-excel', 'Backend\UsersController@importExcel')->name('admin.users.import.excel');
+
+    // Route::get('users/{id}/edit', 'Backend\UsersController@edit')->name('admin.users.edit'); // For getting user data
+    // Route::post('users/{id}/update', 'Backend\UsersController@ajaxUpdate')->name('admin.users.ajaxUpdate');
+    // Route::delete('users/{id}', 'Backend\UsersController@ajaxDestroy')->name('admin.users.ajaxDestroy');
+
+
+
+ Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
+    Route::post('/users/new/{id}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
+    Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
+    
+   
+    // exel import 
+
+    Route::post('users/import-excel', 'Backend\UsersController@importExcel')->name('admin.users.import.excel');
+    Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
+
+
+    Route::resource('roles', 'Backend\RolesController', ['names' => 'admin.roles']);
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
 
 
 
 
-//  user approval
+    //  user approval
 
 
 

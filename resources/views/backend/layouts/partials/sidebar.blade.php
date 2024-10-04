@@ -160,7 +160,7 @@ $usr = Auth::guard('admin')->user();
 
                     <!-- Link for showing all volunteers -->
                     <a class="nav-link {{ Route::is('admin.pendingvolunteers') ? 'active' : '' }}" href="{{ route('admin.pendingvolunteers') }}">
-                        All Volunteers
+                        Volunteers Approval 
                     </a>
                     @endif
 

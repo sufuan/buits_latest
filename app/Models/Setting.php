@@ -9,9 +9,12 @@ class Setting extends Model
 {
     use HasFactory;
 
-    // The table name should match the 'settings' table created by the migration
     protected $table = 'settings';
 
-    // You can also define the fillable attributes if needed
     protected $fillable = ['volunteer_application_enabled'];
+
+    // Set default values
+    protected $attributes = [
+        'volunteer_application_enabled' => false,
+    ];
 }
