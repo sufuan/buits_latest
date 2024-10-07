@@ -42,7 +42,6 @@ User Create - Admin Panel
             </div>
         </div>
     </header>
-    @include('backend.layouts.partials.messages')
 
     <!-- Main page content-->
     <div class="container-xl px-4 mt-4">
@@ -76,31 +75,27 @@ User Create - Admin Panel
                             <!-- Form Row-->
                             <div class="row gx-3 mb-3">
                                 <!-- Form Group (first name)-->
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputFirstName">First name *</label>
-                                    <input class="form-control" id="inputFirstName" type="text" name="name" placeholder="Enter your first name" value="" required />
+                                <div class="col-md-12">
+                                    <label class="small mb-1" for="inputFirstName">Name *</label>
+                                    <input class="form-control" id="inputFirstName" type="text" name="name" placeholder="Enter your  name" value="" required />
                                 </div>
-                                <!-- Form Group (last name)-->
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputLastName">Last name</label>
-                                    <input class="form-control" id="inputLastName" type="text" name="last_name" placeholder="Enter your last name" value="" />
-                                </div>
+                               
                             </div>
-                            <!-- Form Group (email address)-->
-                            <div class="mb-3">
-                                <label class="small mb-1" for="inputEmailAddress">Email address *</label>
-                                <input class="form-control" id="inputEmailAddress" type="email" name="email" placeholder="Enter your email address" value="" required />
-                            </div>
+
                             <!-- Form Row (password and confirm password)-->
                             <div class="row gx-3 mb-3">
+                                <div class="col-md-6 col-sm-12">
+                                    <label class="small mb-1" for="inputEmailAddress">Email address *</label>
+                                    <input class="form-control" id="inputEmailAddress" type="email" name="email" placeholder="Enter your email address" value="" required />
+                                </div>
+
                                 <div class="col-md-6 col-sm-12">
                                     <label for="password" class="small mb-1">Password *</label>
                                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
                                 </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <label for="password_confirmation" class="small mb-1">Confirm Password *</label>
-                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
-                                </div>
+
+
+
                             </div>
 
                             <div class="row gx-3 mb-3">

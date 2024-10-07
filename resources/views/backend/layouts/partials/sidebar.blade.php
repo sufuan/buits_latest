@@ -60,16 +60,23 @@ $usr = Auth::guard('admin')->user();
 
 
 
-
-            <!-- Sidenav Menu Heading (User)-->
+            <!-- Sidenav Menu Heading (User) -->
             @if ($usr->can('user.create') || $usr->can('user.view') || $usr->can('user.edit') || $usr->can('user.delete'))
             <div class="sidenav-menu-heading">User</div>
-            <!-- Sidenav Accordion (User)-->
+
+            <!-- Sidenav Accordion (User) -->
             <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapseUsers" aria-expanded="false" aria-controls="collapseUsers">
                 <div class="nav-link-icon"><i data-feather="activity"></i></div>
                 User Management
+
+                <!-- Show unread notifications badge on the main link if there are any -->
+                @if ($unreadNotificationsCount > 0)
+                <span class="badge rounded-pill bg-danger mx-1" style="font-size: 0.50rem; padding: 0.25em 0.4em;">New</span>
+                @endif
+
                 <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
             </a>
+
             <div class="collapse" id="collapseUsers" data-bs-parent="#accordionSidenav">
                 <nav class="sidenav-menu-nested nav">
                     @if ($usr->can('user.view'))
@@ -77,19 +84,31 @@ $usr = Auth::guard('admin')->user();
                         All Users
                     </a>
                     @endif
+
                     @if ($usr->can('user.create'))
                     <a class="nav-link {{ Route::is('admin.users.create') ? 'active' : '' }}" href="{{ route('admin.users.create') }}">
                         Create User
                     </a>
                     @endif
+
                     @if ($usr->can('user.approve'))
-                    <a class="nav-link {{ Route::is('admin.users.approvallist') ? 'active' : '' }}" href="{{ route('admin.users.approvallist') }}">
+                    <a class="nav-link {{ Route::is('admin.users.approvallist') ? 'active' : '' }}" href="{{ route('admin.users.approvallist') }}?markAsRead=true">
                         New User Request
+                        @if ($unreadNotificationsCount > 0)
+                        <span class="position-relative ms-2">
+                            <span class="badge rounded-circle bg-danger border border-light">
+                                {{ $unreadNotificationsCount }}
+                                <span class="visually-hidden">New alerts</span>
+                            </span>
+                        </span>
+                        @endif
                     </a>
                     @endif
+
                 </nav>
             </div>
             @endif
+
 
             <!-- Sidenav Menu Heading (Admin)-->
             @if ($usr->can('admin.create') || $usr->can('admin.view') || $usr->can('admin.edit') || $usr->can('admin.delete'))
@@ -160,7 +179,7 @@ $usr = Auth::guard('admin')->user();
 
                     <!-- Link for showing all volunteers -->
                     <a class="nav-link {{ Route::is('admin.pendingvolunteers') ? 'active' : '' }}" href="{{ route('admin.pendingvolunteers') }}">
-                        Volunteers Approval 
+                        Volunteers Approval
                     </a>
                     @endif
 

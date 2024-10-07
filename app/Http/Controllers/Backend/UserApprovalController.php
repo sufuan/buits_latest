@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
@@ -10,8 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserApprovalController extends Controller
 {
-
-    
     public $user;
 
     public function __construct()
@@ -25,15 +22,28 @@ class UserApprovalController extends Controller
     /**
      * Display a listing of users waiting for approval.
      */
-    public function index()
+    public function index(Request $request)
     {
-
+        // Check if user has permission to view approvals
         if (is_null($this->user) || !$this->user->can('user.approve')) {
             abort(403, 'Sorry !! You are Unauthorized to view any user !');
         }
 
+        // Mark notifications as read if the parameter is present
+        if ($request->has('markAsRead')) {
+            // Get the unread notifications for the authenticated admin user
+            $notifications = $this->user->unreadNotifications;
 
+            // Mark each notification as read
+            foreach ($notifications as $notification) {
+                $notification->markAsRead();
+            }
+        }
+
+        // Fetch users waiting for approval
         $users = PendingUser::all(); // Fetch users waiting for approval
+
+        // Return the view with users
         return view('backend.pages.users.newuserrequest', compact('users'));
     }
 

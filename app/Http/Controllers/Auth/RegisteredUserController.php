@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin; // Import the Admin model
+use App\Notifications\NewUserRegistered; // Import the notification class
 use App\PendingUser;
 use App\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -50,18 +50,8 @@ class RegisteredUserController extends Controller
             'permanent_address' => ['nullable', 'string', 'max:255'],
         ]);
 
-        // Extract and validate the custom form data
-        $customFormData = $request->except([
-            'name', 'email', 'password', 'password_confirmation', 'phone', 'usertype', 'session',
-            'department', 'gender', 'date_of_birth', 'blood_group', 'class_roll', 'father_name',
-            'mother_name', 'current_address', 'permanent_address'
-        ]);
-
-        // Optionally, you can validate custom form data here if needed
-        // $request->validate([...]);
-
-        // Create the user with standard attributes and custom form data
-        PendingUser::create([
+        // Create the pending user
+        $pendingUser = PendingUser::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -77,8 +67,13 @@ class RegisteredUserController extends Controller
             'mother_name' => $request->mother_name,
             'current_address' => $request->current_address,
             'permanent_address' => $request->permanent_address,
-            'custom-form' => json_encode($customFormData) // Save custom form data as JSON
         ]);
+
+        // Notify all admins about the new user registration
+        $admins = Admin::all(); // Query the Admin model to get all admins
+        foreach ($admins as $admin) {
+            $admin->notify(new NewUserRegistered($pendingUser)); // Send the notification
+        }
 
         return redirect()->route('login')->with('status', 'Registration successful! Please wait for approval.');
     }

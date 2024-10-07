@@ -11,12 +11,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\FormBuilderController;
 use App\Http\Controllers\frontend\EventsControllerFrontent;
+use App\Http\Controllers\Backend\NotificationController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::post('/admin/volunteer-status', [App\Http\Controllers\Backend\SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
 
 
 Route::get('/banner', function () {
@@ -99,21 +99,42 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 Route::group(['prefix' => 'admin'], function () {
+
+
+    Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
+
+
+    // Login Routes     // Logout Routes
+    Route::get('/login', 'Backend\Auth\LoginController@showLoginForm')->name('admin.login');
+    Route::post('/login/submit', 'Backend\Auth\LoginController@login')->name('admin.login.submit');
+    Route::post('/logout/submit', 'Backend\Auth\LoginController@logout')->name('admin.logout.submit');
+
+
+
+    //  role and permission route 
+    Route::resource('roles', 'Backend\RolesController', ['names' => 'admin.roles']);
+
+
+    // admin route 
     Route::resource('admins', 'Backend\AdminsController');
+    Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
+
     Route::post('admins/assignRole', 'Backend\AdminsController@assignRole')->name('admin.admins.assignRole');
     Route::get('getUsersByType', 'Backend\AdminsController@getUsersByType')->name('admin.getUsersByType');
 
 
-
-    Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
-    Route::post('users/bulk-import', 'Backend\UsersController@import')->name('admin.users.import');
-    Route::get('/users/export', 'Backend\UsersController@export')->name('admin.users.export');
-
-
-
+    // user route 
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::get('userlistjson', 'Backend\UsersController@userlist')->name('admin.users.userlistjson');
+
+    Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
+    Route::post('/users/new/{id}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
+
+    Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
+    Route::get('/users/export', 'Backend\UsersController@export')->name('admin.users.export');
+    Route::post('users/bulk-import', 'Backend\UsersController@import')->name('admin.users.import');
     Route::post('users/import-excel', 'Backend\UsersController@importExcel')->name('admin.users.import.excel');
+
 
     // Route::get('users/{id}/edit', 'Backend\UsersController@edit')->name('admin.users.edit'); // For getting user data
     // Route::post('users/{id}/update', 'Backend\UsersController@ajaxUpdate')->name('admin.users.ajaxUpdate');
@@ -121,31 +142,6 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
- Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
-    Route::post('/users/new/{id}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
-    Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
-    
-   
-    // exel import 
-
-    Route::post('users/import-excel', 'Backend\UsersController@importExcel')->name('admin.users.import.excel');
-    Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
-
-
-    Route::resource('roles', 'Backend\RolesController', ['names' => 'admin.roles']);
-    Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
-
-
-
-
-    //  user approval
-
-
-
-    // Login Routes     // Logout Routes
-    Route::get('/login', 'Backend\Auth\LoginController@showLoginForm')->name('admin.login');
-    Route::post('/login/submit', 'Backend\Auth\LoginController@login')->name('admin.login.submit');
-    Route::post('/logout/submit', 'Backend\Auth\LoginController@logout')->name('admin.logout.submit');
 
 
 
@@ -157,12 +153,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::patch('/volunteers/status/{id}', 'Backend\VolunteerController@updateVolunteerStatus')->name('admin.volunteers.update_status');
 
 
+
+
     // events 
-
-
-
-
-
     // Display a listing of the resource.
     Route::get('events', [EventsController::class, 'index'])->name('events.index');
 
@@ -191,21 +184,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
-
-    // Route::get('form-builder', [FormBuilderController::class, 'index']);
-    // Route::view('formbuilder', 'backend.pages.FormBuilder.create');  // Corrected path
-    // Route::post('save-form-builder', [FormBuilderController::class, 'create']);
-    // Route::delete('form-delete/{id}', [FormBuilderController::class, 'destroy']);
-    // Route::view('edit-form-builder/{id}', 'backend.pages.FormBuilder.edit');  // Corrected path
-    // Route::get('get-form-builder-edit', [FormBuilderController::class, 'editData']);
-    // Route::post('update-form-builder', [FormBuilderController::class, 'update']);
-    // Route::view('read-form-builder/{id}', 'backend.pages.FormBuilder.read');  // Corrected path
-    // Route::get('get-form-builder', [FormsController::class, 'read']);
-    // Route::post('save-form-transaction', [FormsController::class, 'create']);
-
-
-
-
+    //   form builder 
 
     // Display the form builder index (list of all forms)
     Route::get('form-builder', [FormBuilderController::class, 'index'])->name('formbuilder.index');
@@ -238,15 +217,19 @@ Route::group(['prefix' => 'admin'], function () {
 
     // Volunteer Settings route
     Route::get('/settings/volunteer', [SettingController::class, 'volunteer'])->name('admin.settings.volunteer');
+    Route::post('/admin/volunteer-status', [SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
 
     // Frontend CMS Settings route
     Route::get('/settings/frontend', [SettingController::class, 'frontend'])->name('admin.settings.frontend');
 
 
+    //  notification 
+    Route::get('notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('admin.notifications.read');
+    Route::get('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('admin.notifications.markAllAsRead');
 
 
 
-    Route::post('/admin/volunteer-status', [App\Http\Controllers\Backend\SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
 
 
 
