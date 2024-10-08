@@ -19,6 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'member_id',
         'name',
         'email',
         'password',
@@ -39,6 +40,7 @@ class User extends Authenticatable
         'transaction_id',
         'custom-form',
         'is_approved',
+
     ];
 
 

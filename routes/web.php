@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\EmailSetting;
 use App\Http\Controllers\Backend\EventsController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\UserApprovalController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\FormBuilderController;
 use App\Http\Controllers\frontend\EventsControllerFrontent;
 use App\Http\Controllers\Backend\NotificationController;
+use App\Http\Controllers\Backend\EmailSettingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -100,6 +102,8 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 Route::group(['prefix' => 'admin'], function () {
 
+    // Route::get('/settings/emails', [EmailSettingController::class, 'index'])->name('admin.settings.email');
+    Route::get('/settings/email', [EmailSetting::class, 'index'])->name('admin.settings.email');
 
     Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
 
@@ -217,6 +221,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     // Volunteer Settings route
     Route::get('/settings/volunteer', [SettingController::class, 'volunteer'])->name('admin.settings.volunteer');
+    Route::get('/settings/emails', [EmailSetting::class, 'volunteer'])->name('admin.settings.email');
     Route::post('/admin/volunteer-status', [SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
 
     // Frontend CMS Settings route
