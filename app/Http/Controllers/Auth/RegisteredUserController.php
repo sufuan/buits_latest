@@ -18,10 +18,39 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
-    {
-        return view('auth.register');
-    }
+ // In your RegisterController or the relevant controller method
+public function create()
+{
+    $departments = [
+        'Marketing',
+        'Law',
+        'Mathematics',
+        'Physics',
+        'History & Civilization',
+        'Soil & Environmental Sciences',
+        'Economics',
+        'Geology & Mining',
+        'Management Studies',
+        'Statistics',
+        'Chemistry',
+        'Coastal Studies and Disaster Management',
+        'Accounting & Information Systems',
+        'Computer Science and Engineering',
+        'Sociology',
+        'Botany',
+        'Public Administration',
+        'Philosophy',
+        'Political Science',
+        'Biochemistry and Biotechnology',
+        'Finance and Banking',
+        'Mass Communication and Journalism',
+        'English',
+        'Bangla',
+    ];
+
+    return view('auth.register', compact('departments'));
+}
+
 
     /**
      * Handle an incoming registration request.
@@ -37,10 +66,10 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'department' => ['nullable', 'string', 'max:255'],
-            'session' => ['nullable', 'integer'],
-            'gender' => ['nullable', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:255'],
+            'department' => ['required', 'string', 'max:255'],
+            'session' => ['required', 'string', 'regex:/^\d{4}-\d{4}$/'],  
+            'gender' => ['required', 'string', 'max:255'],
             'date_of_birth' => ['nullable', 'date'],
             'blood_group' => ['nullable', 'string', 'max:255'],
             'class_roll' => ['nullable', 'integer'],
@@ -48,6 +77,8 @@ class RegisteredUserController extends Controller
             'mother_name' => ['nullable', 'string', 'max:255'],
             'current_address' => ['nullable', 'string', 'max:255'],
             'permanent_address' => ['nullable', 'string', 'max:255'],
+            'transaction_id' => ['required', 'string', 'max:255'],
+
         ]);
 
         // Create the pending user
@@ -67,6 +98,7 @@ class RegisteredUserController extends Controller
             'mother_name' => $request->mother_name,
             'current_address' => $request->current_address,
             'permanent_address' => $request->permanent_address,
+            'transaction_id' => $request->transaction_id,
         ]);
 
         // Notify all admins about the new user registration

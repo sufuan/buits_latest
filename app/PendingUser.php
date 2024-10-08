@@ -29,6 +29,7 @@ class PendingUser extends Model
         'mother_name',
         'current_address',
         'permanent_address',
-        'is_approved', // Add this if you have an is_approved column
+        'is_approved', 
+        'transaction_id',
     ];
 }

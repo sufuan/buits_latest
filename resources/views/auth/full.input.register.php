@@ -74,11 +74,53 @@
             <x-input-error :messages="$errors->get('gender')" class="mt-2" />
         </div>
 
-        <!-- Transaction ID -->
+        <!-- Date of Birth -->
         <div class="mt-4">
-            <x-input-label for="transaction_id" :value="__('Transaction ID')" />
-            <x-text-input id="transaction_id" class="block mt-1 w-full bg-white" type="text" name="transaction_id" :value="old('transaction_id')" required />
-            <x-input-error :messages="$errors->get('transaction_id')" class="mt-2" />
+            <x-input-label for="date_of_birth" :value="__('Date of Birth')" />
+            <x-text-input id="date_of_birth" class="block mt-1 w-full bg-white" type="date" name="date_of_birth" :value="old('date_of_birth')" />
+            <x-input-error :messages="$errors->get('date_of_birth')" class="mt-2" />
+        </div>
+
+        <!-- Blood Group -->
+        <div class="mt-4">
+            <x-input-label for="blood_group" :value="__('Blood Group')" />
+            <x-text-input id="blood_group" class="block mt-1 w-full bg-white" type="text" name="blood_group" :value="old('blood_group')" />
+            <x-input-error :messages="$errors->get('blood_group')" class="mt-2" />
+        </div>
+
+        <!-- Class Roll -->
+        <div class="mt-4">
+            <x-input-label for="class_roll" :value="__('Class Roll')" />
+            <x-text-input id="class_roll" class="block mt-1 w-full bg-white" type="number" name="class_roll" :value="old('class_roll')" />
+            <x-input-error :messages="$errors->get('class_roll')" class="mt-2" />
+        </div>
+
+        <!-- Father's Name -->
+        <div class="mt-4">
+            <x-input-label for="father_name" :value="__('Father\'s Name')" />
+            <x-text-input id="father_name" class="block mt-1 w-full bg-white" type="text" name="father_name" :value="old('father_name')" />
+            <x-input-error :messages="$errors->get('father_name')" class="mt-2" />
+        </div>
+
+        <!-- Mother's Name -->
+        <div class="mt-4">
+            <x-input-label for="mother_name" :value="__('Mother\'s Name')" />
+            <x-text-input id="mother_name" class="block mt-1 w-full bg-white" type="text" name="mother_name" :value="old('mother_name')" />
+            <x-input-error :messages="$errors->get('mother_name')" class="mt-2" />
+        </div>
+
+        <!-- Current Address -->
+        <div class="mt-4">
+            <x-input-label for="current_address" :value="__('Current Address')" />
+            <x-text-input id="current_address" class="block mt-1 w-full bg-white" type="text" name="current_address" :value="old('current_address')" />
+            <x-input-error :messages="$errors->get('current_address')" class="mt-2" />
+        </div>
+
+        <!-- Permanent Address -->
+        <div class="mt-4">
+            <x-input-label for="permanent_address" :value="__('Permanent Address')" />
+            <x-text-input id="permanent_address" class="block mt-1 w-full bg-white" type="text" name="permanent_address" :value="old('permanent_address')" />
+            <x-input-error :messages="$errors->get('permanent_address')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">
