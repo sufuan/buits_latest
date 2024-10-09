@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pending_users', function (Blueprint $table) {
-            $table->string('member_id')->nullable()->first(); // Add as the first column
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('member_id')->nullable()->first(); // Add as the first column and not nullable
         });
     }
 
@@ -21,8 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-         // Remove member_id from the pending_users table
-         Schema::table('pending_users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('member_id');
         });
     }
