@@ -102,6 +102,8 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 Route::group(['prefix' => 'admin'], function () {
 
+
+
     // Route::get('/settings/emails', [EmailSettingController::class, 'index'])->name('admin.settings.email');
     Route::get('/settings/email', [EmailSetting::class, 'index'])->name('admin.settings.email');
 
@@ -127,15 +129,18 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('getUsersByType', 'Backend\AdminsController@getUsersByType')->name('admin.getUsersByType');
 
 
+
     // user route 
+    Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
+    Route::get('/users/export', 'Backend\UsersController@export')->name('admin.users.export');
+
+
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::get('userlistjson', 'Backend\UsersController@userlist')->name('admin.users.userlistjson');
 
     Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
     Route::post('/users/new/{id}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
 
-    Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
-    Route::get('/users/export', 'Backend\UsersController@export')->name('admin.users.export');
     Route::post('users/bulk-import', 'Backend\UsersController@import')->name('admin.users.import');
     Route::post('users/import-excel', 'Backend\UsersController@importExcel')->name('admin.users.import.excel');
 

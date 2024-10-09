@@ -8,46 +8,134 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UsersImport implements ToModel, WithHeadingRow, WithValidation
 {
     /**
+     * Define department codes.
+     */
+    protected $departmentCodes = [
+        "marketing" => "04",
+        "law" => "15",
+        "mathematics" => "05",
+        "physics" => "18",
+        "history and civilization" => "23",
+        "soil and environmental sciences" => "10",
+        "economics" => "01",
+        "geology and mining" => "17",
+        "management studies" => "03",
+        "statistics" => "24",
+        "chemistry" => "12",
+        "coastal studies and disaster management" => "19",
+        "accounting and information systems" => "07",
+        "computer science and engineering" => "13",
+        "sociology" => "06",
+        "botany" => "11",
+        "public administration" => "09",
+        "philosophy" => "20",
+        "political science" => "16",
+        "biochemistry and biotechnology" => "21",
+        "finance and banking" => "14",
+        "mass communication and journalism" => "22",
+        "english" => "02",
+        "bangla" => "08"
+    ];
+
+    /**
+     * Normalize department names.
+     */
+    private function normalizeDepartmentName($department)
+    {
+        // Replace "&" with "and", convert to lowercase, and trim spaces
+        return strtolower(str_replace('&', 'and', trim($department)));
+    }
+
+    /**
      * Map the rows from the Excel file to the User model attributes.
      *
      * @param array $row
-     *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
     {
+        // Normalize the department name
+        $departmentName = $this->normalizeDepartmentName($row['department']);
+        $departmentCode = $this->departmentCodes[$departmentName] ?? null;
+
+        // Log the normalized department name for debugging
+        Log::info('Raw Department Name: ' . $row['department']); // Log the raw name
+        Log::info('Normalized Department Name: ' . $departmentName); // Log the normalized name
+        Log::info('Available Department Codes: ' . implode(', ', array_keys($this->departmentCodes))); // Log available codes
+
+        if (!$departmentCode) {
+            // Log the invalid department for further inspection
+            Log::error('Invalid department in the imported data: ' . $row['department']);
+            throw new \Exception('Invalid department in the imported data: ' . $row['department']);
+        }
+
+        $sessionYear = explode('-', $row['session']);
+        $lastTwoDigitsOfSession = substr(end($sessionYear), -2);
+
+        // Check if member_id exists in the Excel row; if not, generate a new one
+        $memberId = $row['member_id'] ?? $this->generateNewMemberId($departmentCode, $lastTwoDigitsOfSession);
+
+        // Ensure the member_id is unique
+        $existingMember = User::where('member_id', $memberId)->first();
+        if ($existingMember) {
+            return null; // Skip the row if the member ID already exists
+        }
+
         return new User([
-            'name'              => $row['name'],
-            'email'             => $row['email'],
-            'password'          => Hash::make($row['password']),
-            'phone'             => $row['phone'],
-            'usertype'          => $row['usertype'],
-            'session'           => $row['session'],
-            'department'        => $row['department'],
-            'gender'            => $row['gender'],
+            'name'              => trim($row['name']),
+            'email'             => trim($row['email']),
+            'password'          => Hash::make(trim($row['password'])),
+            'phone'             => trim($row['phone']),
+            'usertype'          => trim($row['usertype']),
+            'session'           => trim($row['session']),
+            'department'        => trim($row['department']),
+            'gender'            => trim($row['gender']),
             'date_of_birth'     => Carbon::parse($row['date_of_birth']),
-            'blood_group'       => $row['blood_group'],
-            'class_roll'        => $row['class_roll'],
-            'father_name'       => $row['father_name'],
-            'mother_name'       => $row['mother_name'],
-            'current_address'   => $row['current_address'],
-            'permanent_address' => $row['permanent_address'],
-            'image'             => $row['image'],
-            'skills'            => $row['skills'],
-            'transaction_id'    => $row['transaction_id'],
-            'custom_form'       => $row['custom_form'],
+            'blood_group'       => trim($row['blood_group']),
+            'class_roll'        => trim($row['class_roll']),
+            'father_name'       => trim($row['father_name']),
+            'mother_name'       => trim($row['mother_name']),
+            'current_address'   => trim($row['current_address']),
+            'permanent_address' => trim($row['permanent_address']),
+            'image'             => trim($row['image']),
+            'skills'            => trim($row['skills']),
+            'transaction_id'    => trim($row['transaction_id']),
+            'custom_form'       => trim($row['custom_form']),
             'is_approved'       => $row['is_approved'],
+            'member_id'         => $memberId,
         ]);
     }
 
     /**
+     * Generate a new unique member ID based on the highest numeric part across all member IDs.
+     */
+    private function generateNewMemberId($departmentCode, $lastTwoDigitsOfSession)
+    {
+        // Fetch the last member ID by ordering the users table by 'id' in descending order
+        $lastMember = User::orderBy('id', 'desc')->first();
+
+        // Initialize the default starting number
+        $newFormNumber = 1130;
+
+        if ($lastMember) {
+            // Extract the last four digits of the member_id from the last record
+            $lastFormNumber = (int)substr($lastMember->member_id, -4);
+
+            // Increment the last form number by 1
+            $newFormNumber = $lastFormNumber + 1;
+        }
+
+        // Return the new member ID with department code, session year, and the new form number
+        return $departmentCode . $lastTwoDigitsOfSession . str_pad($newFormNumber, 4, '0', STR_PAD_LEFT);
+    }
+
+    /**
      * Define validation rules for the import.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -56,7 +144,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation
             'email'             => 'required|email|unique:users,email',
             'password'          => 'required|min:6',
             'phone'             => 'nullable|max:15',
-            'usertype'          => 'required|in:,user,volunteer', // Example user types
+            'usertype'          => 'required|in:user,volunteer',
             'date_of_birth'     => 'nullable|date_format:Y-m-d',
             'gender'            => 'required|in:male,female,other',
             'session'           => 'nullable|max:20',
@@ -75,23 +163,22 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation
 
     /**
      * Customize validation error messages.
-     *
-     * @return array
      */
     public function customValidationMessages()
     {
         return [
-            'name.required'          => 'Name is required.',
-            'email.required'         => 'Email is required.',
-            'email.email'            => 'Email must be a valid email address.',
-            'email.unique'           => 'This email is already registered.',
-            'password.required'      => 'Password is required.',
-            'password.min'           => 'Password must be at least 6 characters.',
-            'usertype.required'      => 'User type is required.',
-            'usertype.in'            => 'Invalid user type provided.',
+            'member_id.required'       => 'Member ID is required.',
+            'name.required'            => 'Name is required.',
+            'email.required'           => 'Email is required.',
+            'email.email'              => 'Email must be a valid email address.',
+            'email.unique'             => 'This email is already registered.',
+            'password.required'        => 'Password is required.',
+            'password.min'             => 'Password must be at least 6 characters.',
+            'usertype.required'        => 'User type is required.',
+            'usertype.in'              => 'Invalid user type provided.',
             'date_of_birth.date_format' => 'Date of birth must be in YYYY-MM-DD format.',
-            'gender.required'        => 'Gender is required.',
-            'gender.in'              => 'Invalid gender value. Accepted values: male, female, other.',
+            'gender.required'          => 'Gender is required.',
+            'gender.in'                => 'Invalid gender value. Accepted values: male, female, other.',
         ];
     }
 }
