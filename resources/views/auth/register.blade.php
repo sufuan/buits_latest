@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @section('title', 'Register')
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -42,7 +43,7 @@
             <x-input-label for="department" :value="__('Department')" />
             <select id="department" name="department" class="block mt-1 w-full bg-white" required>
                 @foreach ($departments as $department)
-                    <option value="{{ $department }}">{{ $department }}</option>
+                <option value="{{ $department }}">{{ $department }}</option>
                 @endforeach
             </select>
             <x-input-error :messages="$errors->get('department')" class="mt-2" />
@@ -53,12 +54,12 @@
             <x-input-label for="session" :value="__('Session')" />
             <select id="session" name="session" class="block mt-1 w-full bg-white" required>
                 @php
-                    $currentYear = date('Y');
-                    $startYear = 2015; // Starting from 2015-2016
+                $currentYear = date('Y');
+                $startYear = 2015; // Starting from 2015-2016
                 @endphp
                 @for ($year = $startYear; $year <= $currentYear; $year++)
                     <option value="{{ $year }}-{{ $year + 1 }}">{{ $year }}-{{ $year + 1 }}</option>
-                @endfor
+                    @endfor
             </select>
             <x-input-error :messages="$errors->get('session')" class="mt-2" />
         </div>

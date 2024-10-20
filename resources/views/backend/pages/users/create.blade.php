@@ -5,7 +5,6 @@ User Create - Admin Panel
 @endsection
 
 @section('styles')
-
 <style>
     .form-check-label {
         text-transform: capitalize;
@@ -14,11 +13,6 @@ User Create - Admin Panel
 @endsection
 
 @section('admin-content')
-
-<!-- page title area start -->
-
-<!-- page title area end -->
-
 <main>
     <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
         <div class="container-xl px-4">
@@ -45,63 +39,74 @@ User Create - Admin Panel
 
     <!-- Main page content-->
     <div class="container-xl px-4 mt-4">
-        <div class="row">
-            <div class="col-xl-4">
+        <form action="{{ route('admin.users.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row">
                 <!-- Profile picture card-->
-                <div class="card mb-4 mb-xl-0">
-                    <div class="card-header">Profile Picture</div>
-                    <div class="card-body text-center">
-                        <!-- Profile picture image-->
-                        <img class="img-account-profile rounded-circle mb-2" src="{{ asset('assets/img/demo/user-placeholder.svg') }}" alt="" />
+                <div class="col-xl-4">
+                    <div class="card mb-4 mb-xl-0">
+                        <div class="card-header">Profile Picture</div>
+                        <div class="card-body text-center">
+                            <!-- Profile picture image-->
+                            <img class="img-account-profile rounded-circle mb-2" src="{{ asset('assets/img/demo/user-placeholder.svg') }}" alt="User Placeholder" />
 
-                        <!-- Profile picture help block-->
-                        <div class="small font-italic text-muted mb-4">
-                            JPG or PNG no larger than 5 MB
-                        </div>
-                        <!-- Profile picture upload button-->
-                        <button class="btn btn-primary" type="button">
-                            Upload new image
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-8">
-                <!-- Account details card-->
-                <div class="card mb-4">
-                    <div class="card-header">Account Details</div>
-                    <div class="card-body">
-                        <form action="{{ route('admin.users.store') }}" method="POST">
-                            @csrf
-                            <!-- Form Row-->
-                            <div class="row gx-3 mb-3">
-                                <!-- Form Group (first name)-->
-                                <div class="col-md-12">
-                                    <label class="small mb-1" for="inputFirstName">Name *</label>
-                                    <input class="form-control" id="inputFirstName" type="text" name="name" placeholder="Enter your  name" value="" required />
-                                </div>
-                               
+                            <!-- Profile picture help block-->
+                            <div class="small font-italic text-muted mb-4">
+                                JPG or PNG no larger than 2 MB
                             </div>
 
-                            <!-- Form Row (password and confirm password)-->
+                            <!-- Profile picture upload input-->
+                            <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
+                            @error('image')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account details card-->
+                <div class="col-xl-8">
+                    <div class="card mb-4">
+                        <div class="card-header">Account Details</div>
+                        <div class="card-body">
+                            <!-- Form Group (name)-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-12">
+                                    <label class="small mb-1" for="inputFirstName">Name *</label>
+                                    <input class="form-control @error('name') is-invalid @enderror" id="inputFirstName" type="text" name="name" placeholder="Enter your name" value="{{ old('name') }}" required />
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Form Row (email and password)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6 col-sm-12">
                                     <label class="small mb-1" for="inputEmailAddress">Email address *</label>
-                                    <input class="form-control" id="inputEmailAddress" type="email" name="email" placeholder="Enter your email address" value="" required />
+                                    <input class="form-control @error('email') is-invalid @enderror" id="inputEmailAddress" type="email" name="email" placeholder="Enter your email address" value="{{ old('email') }}" required />
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="col-md-6 col-sm-12">
                                     <label for="password" class="small mb-1">Password *</label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter Password" required>
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-
-
-
                             </div>
 
+                            <!-- Form Row (phone and session)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputPhone">Phone *</label>
-                                    <input class="form-control" id="inputPhone" type="text" name="phone" placeholder="Enter phone number" required>
+                                    <input class="form-control @error('phone') is-invalid @enderror" id="inputPhone" type="text" name="phone" placeholder="Enter phone number" required>
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputSession">Session</label>
@@ -109,7 +114,7 @@ User Create - Admin Panel
                                 </div>
                             </div>
 
-
+                            <!-- Form Row (department and gender)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputDepartment">Department</label>
@@ -117,23 +122,30 @@ User Create - Admin Panel
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputGender">Gender</label>
-                                    <select class="form-select" id="inputGender" name="gender">
+                                    <select class="form-select @error('gender') is-invalid @enderror" id="inputGender" name="gender">
                                         <option value="">Select gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                         <option value="other">Other</option>
                                     </select>
+                                    @error('gender')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
+                            <!-- Form Row (date of birth and blood group)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputDateOfBirth">Date of Birth</label>
-                                    <input class="form-control" id="inputDateOfBirth" type="date" name="date_of_birth">
+                                    <input class="form-control @error('date_of_birth') is-invalid @enderror" id="inputDateOfBirth" type="date" name="date_of_birth">
+                                    @error('date_of_birth')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputBloodGroup">Blood Group *</label>
-                                    <select class="form-select" id="inputBloodGroup" name="blood_group" required>
+                                    <select class="form-select @error('blood_group') is-invalid @enderror" id="inputBloodGroup" name="blood_group" required>
                                         <option value="">Select blood group</option>
                                         <option value="A+">A+</option>
                                         <option value="A-">A-</option>
@@ -144,9 +156,13 @@ User Create - Admin Panel
                                         <option value="AB+">AB+</option>
                                         <option value="AB-">AB-</option>
                                     </select>
+                                    @error('blood_group')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
+                            <!-- Form Row (class roll and father's name)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputClassRoll">Class Roll</label>
@@ -158,6 +174,7 @@ User Create - Admin Panel
                                 </div>
                             </div>
 
+                            <!-- Form Row (mother's name and current address)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputMotherName">Mother's Name</label>
@@ -169,6 +186,7 @@ User Create - Admin Panel
                                 </div>
                             </div>
 
+                            <!-- Form Row (permanent address and skills)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputPermanentAddress">Permanent Address</label>
@@ -180,25 +198,27 @@ User Create - Admin Panel
                                 </div>
                             </div>
 
+                            <!-- Form Row (transaction ID)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputTransactionId">Transaction ID *</label>
-                                    <input class="form-control" id="inputTransactionId" type="text" name="transaction_id" placeholder="Enter transaction ID" required>
+                                    <input class="form-control @error('transaction_id') is-invalid @enderror" id="inputTransactionId" type="text" name="transaction_id" placeholder="Enter transaction ID" required>
+                                    @error('transaction_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Save User</button>
-                        </form>
-
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </main>
-
 @endsection
 
 @section('scripts')
-
+<!-- Additional scripts (if needed) -->
 @endsection
