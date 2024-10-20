@@ -5,12 +5,12 @@
     <div id="toolbar" class="d-flex align-items-center gap-2">
         <!-- Import Button with Tooltip -->
         <button id="importButton" class="btn btn-secondary ml-2" title="Import Users">
-            <i class="fa fa-upload"></i>
+            <i class="fa fa-download"></i>
         </button>
 
         <!-- Download Button for Export -->
         <a href="{{ route('admin.users.export') }}" class="btn btn-secondary ml-2" title="Export Users">
-            <i class="fa fa-download"></i>
+            <i class="fa fa-upload"></i>
         </a>
     </div>
 </div>
@@ -110,6 +110,7 @@
             height: 580,
             locale: 'en-US',
             columns: [
+                { field: 'member_id', title: 'Member Id', sortable: true, align: 'center' },
                 { field: 'name', title: 'Name', sortable: true, align: 'center' },
                 { field: 'email', title: 'Email', sortable: true, align: 'center' },
                 { field: 'phone', title: 'Phone', sortable: true, align: 'center' },

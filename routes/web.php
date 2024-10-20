@@ -82,15 +82,7 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 
-Route::get('manage-menus/{id?}',[menuController::class,'index']);
-Route::post('create-menu',[menuController::class,'store']);	
-Route::get('add-categories-to-menu',[menuController::class,'addCatToMenu']);
-Route::get('add-post-to-menu',[menuController::class,'addPostToMenu']);
-Route::get('add-custom-link',[menuController::class,'addCustomLink']);	
-Route::get('update-menu',[menuController::class,'updateMenu']);	
-Route::post('update-menuitem/{id}',[menuController::class,'updateMenuItem']);
-Route::get('delete-menuitem/{id}/{key}/{in?}',[menuController::class,'deleteMenuItem']);
-Route::get('delete-menu/{id}',[menuController::class,'destroy']);	
+	
 
 
 
@@ -110,8 +102,10 @@ Route::get('delete-menu/{id}',[menuController::class,'destroy']);
 
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
-    Route::post('users/{id}/uploadImage', 'Backend\UsersController@uploadImage')->name('admin.users.uploadImage');
+
+
+
+
 
 
     
@@ -142,12 +136,19 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('admins/assignRole', 'Backend\AdminsController@assignRole')->name('admin.admins.assignRole');
     Route::get('getUsersByType', 'Backend\AdminsController@getUsersByType')->name('admin.getUsersByType');
 
+   
 
+
+
+    
 
     // user route 
+    Route::post('users/bulk-import', 'Backend\UsersController@import')->name('admin.users.import');
+    Route::post('users/import-excel', 'Backend\UsersController@importExcel')->name('admin.users.import.excel');
     Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
     Route::get('/users/export', 'Backend\UsersController@export')->name('admin.users.export');
-
+    Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
+    Route::post('users/{id}/uploadImage', 'Backend\UsersController@uploadImage')->name('admin.users.uploadImage');
 
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::get('userlistjson', 'Backend\UsersController@userlist')->name('admin.users.userlistjson');
@@ -155,8 +156,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
     Route::post('/users/new/{id}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
 
-    Route::post('users/bulk-import', 'Backend\UsersController@import')->name('admin.users.import');
-    Route::post('users/import-excel', 'Backend\UsersController@importExcel')->name('admin.users.import.excel');
+   
 
 
     // Route::get('users/{id}/edit', 'Backend\UsersController@edit')->name('admin.users.edit'); // For getting user data

@@ -26,9 +26,10 @@
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Role</th>
-                            <th>Joined Date</th>
-                            <th>Actions</th>
+                            <th>department</th>
+                            <th>Session</th>
+                            <th>Transaction Id</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,9 +38,11 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
-                                5
+                            {{ $user->department }}
                             </td>
-                            <td>{{ $user->created_at->format('d M Y') }}</td>
+                            <td> {{ $user->session }}</td>
+                            <td> {{ $user->transaction_id }}</td>
+                            
                             <td>
                                 <!-- Approve Switch -->
                                 <div class="form-check form-switch">
