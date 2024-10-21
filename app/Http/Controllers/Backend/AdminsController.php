@@ -98,11 +98,16 @@ class AdminsController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'roles' => 'required|array',
-            'roles.*' => 'exists:roles,name' // Validate that each role exists in the roles table
+            'roles.*' => 'exists:roles,name', // Validate that each role exists in the roles table
         ]);
     
         // Fetch the user by user_id
         $user = User::findOrFail($request->user_id);
+    
+        // Check if the email already exists in the admins table
+        if (Admin::where('email', $user->email)->exists()) {
+            return redirect()->back()->withErrors(['email' => 'The email has already been registered as an admin.']);
+        }
     
         // Create a new Admin entry
         $admin = new Admin();
@@ -125,6 +130,8 @@ class AdminsController extends Controller
         return redirect()->route('admin.admins.index');
     }
     
+    
+
 
 
 

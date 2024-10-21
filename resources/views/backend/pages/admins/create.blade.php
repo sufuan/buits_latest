@@ -42,6 +42,9 @@ Admin Create - Admin Panel
             <div class="col-xl-12">
                 <div class="card mb-4">
                     <div class="card-header">Assign Role to Existing User</div>
+                    @error('email')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                     <div class="card-body">
                         <form action="{{ route('admin.admins.assignRole') }}" method="POST">
                             @csrf
@@ -66,7 +69,7 @@ Admin Create - Admin Panel
                                 <label for="existing_roles" class="small mb-1">Assign Roles</label>
                                 <select name="roles[]" id="existing_roles" class="form-control select2" multiple required>
                                     @foreach ($roles as $role)
-                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                    <option value="{{ $role->name }}">{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -128,7 +131,7 @@ Admin Create - Admin Panel
                                 <label for="roles" class="small mb-1">Assign Roles</label>
                                 <select name="roles[]" id="roles" class="form-control select2" multiple>
                                     @foreach ($roles as $role)
-                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                    <option value="{{ $role->name }}">{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

@@ -47,6 +47,7 @@ class LandingPageController extends Controller
         $banner = AdminPromotionalBanner::findOrFail($id);
         return view('backend.pages.settings.partials.edit-promotional-banner', compact('banner'));
     }
+    
 
     public function updatePromotionalBanner(Request $request, $id)
     {
@@ -55,11 +56,11 @@ class LandingPageController extends Controller
             'sub_title' => 'required|max:80',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+    
         $banner = AdminPromotionalBanner::findOrFail($id);
         $banner->title = $request->title;
         $banner->sub_title = $request->sub_title;
-
+    
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($banner->image) {
@@ -67,12 +68,14 @@ class LandingPageController extends Controller
             }
             $banner->image = $request->file('image')->store('promotional_banner', 'public');
         }
-
+    
         $banner->save();
-
+    
         return redirect()->route('promotional-section')->with('success', 'Banner updated successfully!');
     }
+    
 
+   
     public function deletePromotionalBanner($id)
     {
         $banner = AdminPromotionalBanner::findOrFail($id);
@@ -81,11 +84,18 @@ class LandingPageController extends Controller
         if ($banner->image) {
             Storage::disk('public')->delete($banner->image);
         }
-
+    
         $banner->delete();
-
+    
         return redirect()->route('promotional-section')->with('success', 'Banner deleted successfully!');
     }
+    
+
+
+
+
+
+
     public function togglePromotionalStatus($id, $status)
     {
         $banner = AdminPromotionalBanner::findOrFail($id);
@@ -95,5 +105,6 @@ class LandingPageController extends Controller
         // Redirect back to the promotional section with a success message
         return redirect()->route('promotional-section')->with('success', 'Banner status updated successfully!');
     }
-    
+
+
 }
