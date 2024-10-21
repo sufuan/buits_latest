@@ -20,7 +20,7 @@
             display: block;
             margin-bottom: 5px;
         }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
@@ -68,24 +68,81 @@
         @endif
 
         <!-- Registration Form -->
-        <form action="{{ route('volunteer.register') }}" method="POST">
+        <form method="POST" action="{{ route('volunteer.register') }}">
             @csrf
+
+            <!-- Name Field -->
             <div class="form-group">
                 <label for="name">Name:</label>
-                <input type="text" name="name" id="name" value="{{ old('name') }}" required>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+                @error('name')
+                    <span class="error">{{ $message }}</span>
+                @enderror
             </div>
+
+            <!-- Email Field -->
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}" required>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                @error('email')
+                    <span class="error">{{ $message }}</span>
+                @enderror
             </div>
+
+            <!-- Password Field -->
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required>
+                <input type="password" id="password" name="password" required>
+                @error('password')
+                    <span class="error">{{ $message }}</span>
+                @enderror
             </div>
+
+            <!-- Phone Field -->
             <div class="form-group">
-                <label for="phone">Phone (optional):</label>
-                <input type="text" name="phone" id="phone" value="{{ old('phone') }}">
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" value="{{ old('phone') }}">
+                @error('phone')
+                    <span class="error">{{ $message }}</span>
+                @enderror
             </div>
+
+            <!-- Department Field (Dropdown) -->
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <select id="department" name="department" required>
+                    <option value="">Select Department</option>
+                    @foreach($departments as $department)
+                        <option value="{{ $department }}" {{ old('department') == $department ? 'selected' : '' }}>
+                            {{ $department }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('department')
+                    <span class="error">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <!-- Session Field -->
+            <div class="form-group">
+                <label for="session">Session:</label>
+                <select id="session" name="session" required>
+                    @php
+                        $currentYear = date('Y');
+                        $startYear = 2015; // Starting from 2015-2016
+                    @endphp
+                    @for ($year = $startYear; $year <= $currentYear; $year++)
+                        <option value="{{ $year }}-{{ $year + 1 }}" {{ old('session') == "$year-$year + 1" ? 'selected' : '' }}>
+                            {{ $year }}-{{ $year + 1 }}
+                        </option>
+                    @endfor
+                </select>
+                @error('session')
+                    <span class="error">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <!-- Submit Button -->
             <div class="form-group">
                 <button type="submit">Register</button>
             </div>

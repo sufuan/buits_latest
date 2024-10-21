@@ -4,7 +4,7 @@
 
 @section('admin-content')
 <div>
-    <table id="table" data-toolbar="#toolbar" data-search='true' data-show-refresh="true" data-toggle="table" data-show-toggle="true" data-show-export="true" data-click-to-select="true" data-show-fullscreen="true" data-show-columns="true" data-show-columns-toggle-all="true" data-url="{{ url('admin/pendingvolunteers') }}" data-height="400" data-pagination="true" data-page-list="[2, 10, 50, 100, all]">
+    <table id="table" data-toolbar="#toolbar" data-search='true' data-show-refresh="true" data-toggle="table" data-show-toggle="true" data-show-export="true" data-click-to-select="true" data-show-fullscreen="true" data-show-columns="true" data-show-columns-toggle-all="true" data-url="{{ url('admin/pendingvolunteers') }}" data-height="650" data-pagination="true" data-page-list="[2, 10, 50, 100, all]">
         <thead>
             <tr>
                 <th data-field="id">ID</th>

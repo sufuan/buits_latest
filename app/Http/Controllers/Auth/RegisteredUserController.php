@@ -59,6 +59,8 @@ public function create()
      */
     public function store(Request $request): RedirectResponse
     {
+
+        // dd($request->all()); // To check all form data
         $request->request->remove('_token');
 
         // Validate the standard user fields

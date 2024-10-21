@@ -117,11 +117,11 @@
                 { field: 'usertype', title: 'User Type', sortable: true, align: 'center' },
                 { field: 'session', title: 'Session', sortable: true, align: 'center' },
                 { field: 'department', title: 'Department', sortable: true, align: 'center' },
+                { field: 'transaction_id', title: 'Transaction ID', sortable: true, align: 'center' },
                 { field: 'gender', title: 'Gender', sortable: true, align: 'center' },
                 { field: 'blood_group', title: 'Blood Group', sortable: true, align: 'center' },
                 { field: 'current_address', title: 'Current Address', sortable: true, align: 'center' },
                 { field: 'skills', title: 'Skills', sortable: true, align: 'center' },
-                { field: 'transaction_id', title: 'Transaction ID', sortable: true, align: 'center' },
             ]
         });
     }

@@ -130,6 +130,7 @@ class UserApprovalController extends Controller
             'current_address' => $pendingUser->current_address,
             'permanent_address' => $pendingUser->permanent_address,
             'member_id' => $memberId, // Assign the generated member_id
+            'transaction_id' => $pendingUser->transaction_id,
             'is_approved' => true,
         ]);
     

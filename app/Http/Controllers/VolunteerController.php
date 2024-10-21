@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Post;
@@ -19,8 +18,36 @@ class VolunteerController extends Controller
             return view('volunteer.registrationClosed');
         }
 
-        // Proceed to the registration form if enabled
-        return view('volunteer.register');
+        // List of departments to show in the registration form
+        $departments = [
+            'Marketing',
+            'Law',
+            'Mathematics',
+            'Physics',
+            'History & Civilization',
+            'Soil & Environmental Sciences',
+            'Economics',
+            'Geology & Mining',
+            'Management Studies',
+            'Statistics',
+            'Chemistry',
+            'Coastal Studies and Disaster Management',
+            'Accounting & Information Systems',
+            'Computer Science and Engineering',
+            'Sociology',
+            'Botany',
+            'Public Administration',
+            'Philosophy',
+            'Political Science',
+            'Biochemistry and Biotechnology',
+            'Finance and Banking',
+            'Mass Communication and Journalism',
+            'English',
+            'Bangla',
+        ];
+
+        // Proceed to the registration form with the departments
+        return view('volunteer.register', compact('departments'));
     }
 
     public function register(Request $request)
@@ -31,6 +58,8 @@ class VolunteerController extends Controller
             'email' => 'required|string|email|max:255|unique:posts,email', // Ensure email is unique
             'password' => 'required|string|min:8',
             'phone' => 'nullable|string|max:255',
+            'department' => 'required|string', // Validate department selection
+            'session' => 'required|string|max:9|regex:/^\d{4}-\d{4}$/', // Validate session format as YYYY-YYYY
         ]);
 
         // Create new post
@@ -39,6 +68,8 @@ class VolunteerController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
+            'department' => $request->department, // Store department
+            'session' => $request->session,       // Store session
             'post_status' => 'pending', // Set status to pending
         ]);
 
