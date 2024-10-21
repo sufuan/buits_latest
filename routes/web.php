@@ -83,7 +83,7 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 
-	
+
 
 
 
@@ -103,13 +103,17 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 Route::group(['prefix' => 'admin'], function () {
-    // Route::get('/settings/frontend', [SettingController::class, 'frontend'])->name('admin.settings.frontend');
+    Route::get('/settings/frontend/promotional-section', [LandingPageController::class, 'promotionalSection'])->name('promotional-section');
+    Route::post('/settings/frontend/promotional-section', [LandingPageController::class, 'storePromotionalBanner'])->name('promotional-banner.store');
+    Route::get('/settings/frontend/promotional-section/edit/{id}', [LandingPageController::class, 'editPromotionalBanner'])->name('promotional-banner.edit');
+    Route::post('/settings/frontend/promotional-section/update/{id}', [LandingPageController::class, 'updatePromotionalBanner'])->name('promotional-banner.update');
+    Route::delete('/settings/frontend/promotional-section/delete/{id}', [LandingPageController::class, 'deletePromotionalBanner'])->name('promotional-banner.delete');
+    Route::get('/settings/frontend/promotional-section/status/{id}/{status}', [LandingPageController::class, 'togglePromotionalStatus'])->name('promotional-banner.status');
 
 
 
     Route::get('/settings/frontend', [LandingPageController::class, 'frontend'])->name('admin.settings.frontend');
     Route::get('/settings/frontend/fixed-data', [LandingPageController::class, 'fixedData'])->name('fixed-data');
-    Route::get('/settings/frontend/promotional-section', [LandingPageController::class, 'promotionalSection'])->name('promotional-section');
     Route::get('/settings/frontend/feature-list', [LandingPageController::class, 'featureList'])->name('feature-list');
     Route::get('/settings/frontend/testimonials', [LandingPageController::class, 'testimonials'])->name('testimonials');
     Route::get('/settings/frontend/contact-us', [LandingPageController::class, 'contactUs'])->name('contact-us');
@@ -120,7 +124,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
-    
+
 
 
 
@@ -147,11 +151,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('admins/assignRole', 'Backend\AdminsController@assignRole')->name('admin.admins.assignRole');
     Route::get('getUsersByType', 'Backend\AdminsController@getUsersByType')->name('admin.getUsersByType');
 
-   
 
 
 
-    
+
+
 
     // user route 
     Route::post('users/bulk-import', 'Backend\UsersController@import')->name('admin.users.import');
@@ -167,7 +171,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/users/new/approval', [UserApprovalController::class, 'index'])->name('admin.users.approvallist');
     Route::post('/users/new/{id}/approve', [UserApprovalController::class, 'approve'])->name('admin.users.approve');
 
-   
+
 
 
     // Route::get('users/{id}/edit', 'Backend\UsersController@edit')->name('admin.users.edit'); // For getting user data
