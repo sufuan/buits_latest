@@ -7,11 +7,12 @@
     <title>BUITS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="css/customize-animate.css" />
-    <link rel="stylesheet" href="css/odometer.css" />
-    <link rel="stylesheet" href="css/owl.min.css" />
-    <link rel="stylesheet" href="css/toastr.css" />
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/customize-animate.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/odometer.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/owl.min.css') }}" />
+    <!-- <link rel="stylesheet" href="{{ asset('assets/landing/css/toastr.css') }}" /> -->
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/main.css') }}" />
+
 
     <style type="text/css">
         /* Initial state: transparent background and black text */
@@ -57,10 +58,9 @@
             color: white !important;
         }
 
-        White hamburger icon when scrolled or menu is open
-        .navbar.scrolled .navbar-dark .navbar-toggler-icon,
+        White hamburger icon when scrolled or menu is open .navbar.scrolled .navbar-dark .navbar-toggler-icon,
         .navbar.show .navbar-dark .navbar-toggler-icon {
-            background-color:white !important;
+            background-color: white !important;
         }
 
         .navbar .megamenu {
@@ -87,6 +87,7 @@
         }
 
         @media (max-width: 991px) {
+
             .navbar.fixed-top .navbar-collapse,
             .navbar.sticky-top .navbar-collapse {
                 overflow-y: hidden !important;
@@ -97,7 +98,8 @@
 
         /* Add padding to the top of the body to prevent content overlap */
         body {
-            padding-top: 56px; /* Adjust according to the height of the navbar */
+            padding-top: 56px;
+            /* Adjust according to the height of the navbar */
         }
     </style>
 
@@ -105,104 +107,107 @@
 
 <body>
 
-<section>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Brand</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="main_nav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
-                    <li class="nav-item dropdown has-megamenu">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Mega menu</a>
-                        <div class="dropdown-menu megamenu" role="menu">
-                            <div class="row g-3">
-                                <div class="col-lg-3 col-6">
-                                    <div class="col-megamenu">
-                                        <h6 class="title">Title Menu One</h6>
-                                        <ul class="list-unstyled">
-                                            <li><a href="#">Custom Menu</a></li>
-                                            <li><a href="#">Custom Menu</a></li>
-                                            <li><a href="#">Custom Menu</a></li>
-                                            <li><a href="#">Custom Menu</a></li>
-                                            <li><a href="#">Custom Menu</a></li>
-                                            <li><a href="#">Custom Menu</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    @if (Route::has('login'))
-                        @auth
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/dashboard') }}">Dashboard</a></li>
-                        @else
-                            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                            @if (Route::has('register'))
-                                <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
-                            @endif
-                        @endauth
-                    @endif
-                    
-                </ul>
+    @include('header') <!-- This includes the header -->
+    @include('partials.banner') <!-- This includes the header -->
+
+
+
+
+<h1>
+   Bnnner
+</h1>
+    <section class="main-category overflow-hidden pt-30 pb-50">
+        <div class="container">
+            <div class="main-category-slider owl-theme owl-carousel">
+             
+                <div class="category-slide-item"
+                    style="background: url({{asset('storage/app/public/promotional_banner')}}/{{ isset($item['image']) ? $item['image'] : null }}) no-repeat center center / cover">
+                    <div>
+                      
+                    </div>
+                </div>
+              
             </div>
         </div>
-    </nav>
-</section>
+    </section>
 
 
-<h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, ducimus! Quisquam molestiae alias commodi. Velit tempore repellat sit maxime! Corporis fugiat perspiciatis, pariatur voluptatem earum quas ducimus nam quisquam debitis!</h1>
 
 
-<br><h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, ducimus! Quisquam molestiae alias commodi. Velit tempore repellat sit maxime! Corporis fugiat perspiciatis, pariatur voluptatem earum quas ducimus nam quisquam debitis!</h1><br><br><h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, ducimus! Quisquam molestiae alias commodi. Velit tempore repellat sit maxime! Corporis fugiat perspiciatis, pariatur voluptatem earum quas ducimus nam quisquam debitis!</h1>
-<br><br><br><br>
-<h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, ducimus! Quisquam molestiae alias commodi. Velit tempore repellat sit maxime! Corporis fugiat perspiciatis, pariatur voluptatem earum quas ducimus nam quisquam debitis!</h1>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="js/jquery-3.6.0.min.js"></script>
-<script src="js/viewport.jquery.js"></script>
-<script src="js/wow.min.js"></script>
-<script src="js/odometer.min.js"></script>
-<script src="js/owl.min.js"></script>
-<script src="js/main.js"></script>
-<script src="js/toastr.js"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        window.addEventListener('scroll', function() {
-            const nav = document.querySelector('.navbar');
-            if (window.scrollY > 30) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('assets/landing/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/viewport.jquery.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/wow.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/odometer.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/owl.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/main.js') }}"></script>
+    <!-- <script src="{{ asset('assets/landing/js/toastr.js') }}"></script> -->
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            window.addEventListener('scroll', function() {
+                const nav = document.querySelector('.navbar');
+                if (window.scrollY > 30) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            });
+
+            // Listen for the Bootstrap collapse event
+            const navbarCollapse = document.querySelector('#main_nav');
+            navbarCollapse.addEventListener('show.bs.collapse', function() {
+                const nav = document.querySelector('.navbar');
+                nav.classList.add('show'); // Add 'show' class when menu opens
+            });
+
+            navbarCollapse.addEventListener('hide.bs.collapse', function() {
+                const nav = document.querySelector('.navbar');
+                nav.classList.remove('show'); // Remove 'show' class when menu closes
+            });
         });
-
-        // Listen for the Bootstrap collapse event
-        const navbarCollapse = document.querySelector('#main_nav');
-        navbarCollapse.addEventListener('show.bs.collapse', function () {
-            const nav = document.querySelector('.navbar');
-            nav.classList.add('show'); // Add 'show' class when menu opens
-        });
-
-        navbarCollapse.addEventListener('hide.bs.collapse', function () {
-            const nav = document.querySelector('.navbar');
-            nav.classList.remove('show'); // Remove 'show' class when menu closes
-        });
-    });
-</script>
+    </script>
 
 </body>
 
 </html>
-
-
-
-
-

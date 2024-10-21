@@ -14,6 +14,7 @@ use App\Http\Controllers\FormBuilderController;
 use App\Http\Controllers\frontend\EventsControllerFrontent;
 use App\Http\Controllers\Backend\NotificationController;
 use App\Http\Controllers\Backend\EmailSettingController;
+use App\Http\Controllers\Backend\LandingPageController;
 use App\Http\Controllers\menuController;
 
 Route::get('/', function () {
@@ -102,6 +103,17 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 Route::group(['prefix' => 'admin'], function () {
+    // Route::get('/settings/frontend', [SettingController::class, 'frontend'])->name('admin.settings.frontend');
+
+
+
+    Route::get('/settings/frontend', [LandingPageController::class, 'frontend'])->name('admin.settings.frontend');
+    Route::get('/settings/frontend/fixed-data', [LandingPageController::class, 'fixedData'])->name('fixed-data');
+    Route::get('/settings/frontend/promotional-section', [LandingPageController::class, 'promotionalSection'])->name('promotional-section');
+    Route::get('/settings/frontend/feature-list', [LandingPageController::class, 'featureList'])->name('feature-list');
+    Route::get('/settings/frontend/testimonials', [LandingPageController::class, 'testimonials'])->name('testimonials');
+    Route::get('/settings/frontend/contact-us', [LandingPageController::class, 'contactUs'])->name('contact-us');
+
 
 
 
@@ -112,8 +124,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
-    // Route::get('/settings/emails', [EmailSettingController::class, 'index'])->name('admin.settings.email');
-    Route::get('/settings/email', [EmailSetting::class, 'index'])->name('admin.settings.email');
+
 
     Route::get('/', 'Backend\DashboardController@index')->name('admin.dashboard');
 
@@ -244,7 +255,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/admin/volunteer-status', [SettingController::class, 'toggleVolunteerStatus'])->name('admin.toggleVolunteerStatus');
 
     // Frontend CMS Settings route
-    Route::get('/settings/frontend', [SettingController::class, 'frontend'])->name('admin.settings.frontend');
 
 
     //  notification 
