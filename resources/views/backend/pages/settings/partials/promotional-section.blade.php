@@ -88,7 +88,7 @@
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm">
-                                            <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$banner->id}}','promotional-on.png','promotional-off.png','Turn ON Promotional Banner Section','Turn OFF Promotional Banner Section',`<p>Promotional banner will be enabled. You will be able to see promotional activity</p>`,`<p>Promotional banner will be disabled. You will be unable to see promotional activity</p>`)" id="status-{{$banner->id}}" {{$banner->status ? 'checked' : ''}}>
+                                            <input type="checkbox" class="toggle-switch-input" onclick="toggleStatusModal(event,'status-{{$banner->id}}','promotional-on.png','promotional-off.png','Turn ON Promotional Banner Section','Turn OFF Promotional Banner Section',`<p>Promotional banner will be enabled. You will be able to see promotional activity</p>`,`<p>Promotional banner will be disabled. You will be unable to see promotional activity</p>`)" id="status-{{$banner->id}}" {{$banner->status ? 'checked' : ''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -119,25 +119,52 @@
                 </div>
                 @endif
             </div>
+
+            <!-- Modal for status confirmation -->
+            <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="statusModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="statusModalBody"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="confirmToggleStatus">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-@endsection
-
-@push('styles')
-<style>
-    .upload-img-3 img.vertical-img {
-        object-fit: cover;
-        aspect-ratio: 756 / 189; /* Adjusts the height/width ratio */
-        width: 100%; /* Ensures it fills the parent container */
-        height: auto; /* Maintains the aspect ratio */
-    }
-</style>
-@endpush
-
 @push('scripts')
 <script>
+    let currentStatusFormId;
+
+    function toggleStatusModal(event, formId, imgOn, imgOff, titleOn, titleOff, bodyOn, bodyOff) {
+        currentStatusFormId = formId; // Store the form ID to toggle later
+
+        // Set modal title and body based on current status
+        const isChecked = event.target.checked;
+        document.getElementById('statusModalLabel').innerText = isChecked ? titleOn : titleOff;
+        document.getElementById('statusModalBody').innerHTML = isChecked ? bodyOn : bodyOff;
+
+        // Show the modal
+        var myModal = new bootstrap.Modal(document.getElementById('statusModal'));
+        myModal.show();
+
+        // Attach event to the confirm button
+        document.getElementById('confirmToggleStatus').onclick = function() {
+            // Submit the form
+            document.getElementById(currentStatusFormId + '_form').submit();
+            myModal.hide();
+        };
+    }
+
+    // Existing code to preview the image
     document.getElementById('imageInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -149,4 +176,7 @@
         }
     });
 </script>
+
 @endpush
+
+@endsection

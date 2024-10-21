@@ -86,13 +86,14 @@ class LandingPageController extends Controller
 
         return redirect()->route('promotional-section')->with('success', 'Banner deleted successfully!');
     }
-
     public function togglePromotionalStatus($id, $status)
     {
         $banner = AdminPromotionalBanner::findOrFail($id);
         $banner->status = $status;
         $banner->save();
-
-        return response()->json(['success' => true]);
+    
+        // Redirect back to the promotional section with a success message
+        return redirect()->route('promotional-section')->with('success', 'Banner status updated successfully!');
     }
+    
 }
