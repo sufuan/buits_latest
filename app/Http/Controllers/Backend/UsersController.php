@@ -94,7 +94,7 @@ class UsersController extends Controller
 
 
 
-    public function store(Request $request) 
+    public function store(Request $request)
     {
         // Validation logic here
         $request->validate([
@@ -115,21 +115,21 @@ class UsersController extends Controller
             'skills' => 'nullable|string',
             'transaction_id' => 'required|string',
         ]);
-    
+
         // Handle image upload and resizing
         $imagePath = null;
         if ($request->file('image')) {
             $manager = new ImageManager(new Driver());
-            
+
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension(); // Generate unique file name
-    
+
             $image = $manager->read($image);
             $image->resize(300, 300);
             $image->toJpeg(75)->save(base_path('public/images/users/profile/' . $imageName));
             $imagePath = 'images/users/profile/' . $imageName; // Store relative path
         }
-    
+
         // Generate the new member ID
         $memberId = $this->generateNewMemberId((object) [
             'department' => $request->department,
@@ -137,7 +137,7 @@ class UsersController extends Controller
         ]);
 
         Log::info('Generated Member ID: ' . $memberId);
-    
+
         // Create a new user and save the image path in the database if applicable
         User::create([
             'name' => $request->name,
@@ -158,12 +158,12 @@ class UsersController extends Controller
             'transaction_id' => $request->transaction_id,
             'member_id' => $memberId, // Add member_id to the user
         ]);
-    
+
         // Redirect to the users index
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
-    
-    
+
+
 
 
 
@@ -242,12 +242,17 @@ class UsersController extends Controller
 
 
 
+    //    display specific user 
 
-    // Display the specified user
-    public function show(User $user)
+    public function show($id)
     {
-        return view('backend.pages.users.show', compact('user'));
+        // Fetch the user by ID
+        $user = User::findOrFail($id);
+
+        // Return the view to display the user's details
+        return view('backend.pages.users.showsingleuser', compact('user'));
     }
+
 
     // Show the form for editing the specified user
     public function edit(User $user)
@@ -264,6 +269,8 @@ class UsersController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
         ]);
+
+
 
 
 
@@ -292,6 +299,8 @@ class UsersController extends Controller
     {
         return view('backend.pages.users.bulkImport'); // View for the bulk import form
     }
+
+
 
     public function import(Request $request)
     {
@@ -332,6 +341,9 @@ class UsersController extends Controller
             return redirect()->back()->with('error', 'Error importing users: ' . $e->getMessage());
         }
     }
+
+
+
 
     public function export()
     {
