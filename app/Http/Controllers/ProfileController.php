@@ -15,10 +15,51 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
+
+
+     private function getDepartments()
+     {
+         return [
+             'Marketing',
+             'Law',
+             'Mathematics',
+             'Physics',
+             'History & Civilization',
+             'Soil & Environmental Sciences',
+             'Economics',
+             'Geology & Mining',
+             'Management Studies',
+             'Statistics',
+             'Chemistry',
+             'Coastal Studies and Disaster Management',
+             'Accounting & Information Systems',
+             'Computer Science and Engineering',
+             'Sociology',
+             'Botany',
+             'Public Administration',
+             'Philosophy',
+             'Political Science',
+             'Biochemistry and Biotechnology',
+             'Finance and Banking',
+             'Mass Communication and Journalism',
+             'English',
+             'Bangla',
+         ];
+     }
+
+
+
+ 
     public function edit()
     {
         $user = Auth::user(); // Get the authenticated user
-        return view('profile.edit', compact('user')); // Correct view path
+        $departments = $this->getDepartments();
+        return view('profile.edit', compact('user', 'departments')); // Correct view path
+
+      
     }
 
     /**

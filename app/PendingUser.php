@@ -13,7 +13,7 @@ class PendingUser extends Model
     protected $table = 'pending_users'; // Specify the table name if it's different
 
     protected $fillable = [
-        'member_id',
+       
         'name',
         'email',
         'password',

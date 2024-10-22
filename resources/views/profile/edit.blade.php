@@ -107,9 +107,15 @@
                                 </div>
                             </div>
                             <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
+                            <div class="col-md-6">
                                     <label class="small mb-1" for="inputDepartment">Department</label>
-                                    <input class="form-control" id="inputDepartment" type="text" name="department" placeholder="Enter Department" value="{{ $user->department }}" />
+                                    <select id="inputDepartment" name="department" class="form-control" required>
+                                        @foreach ($departments as $department)
+                                        <option value="{{ $department }}" {{ $user->department === $department ? 'selected' : '' }}>
+                                            {{ $department }}
+                                        </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputGender">Gender</label>
