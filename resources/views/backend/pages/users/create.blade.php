@@ -58,7 +58,7 @@ User Create - Admin Panel
                             <!-- Profile picture upload input-->
                             <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
                             @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -75,7 +75,7 @@ User Create - Admin Panel
                                     <label class="small mb-1" for="inputFirstName">Name *</label>
                                     <input class="form-control @error('name') is-invalid @enderror" id="inputFirstName" type="text" name="name" placeholder="Enter your name" value="{{ old('name') }}" required />
                                     @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -86,7 +86,7 @@ User Create - Admin Panel
                                     <label class="small mb-1" for="inputEmailAddress">Email address *</label>
                                     <input class="form-control @error('email') is-invalid @enderror" id="inputEmailAddress" type="email" name="email" placeholder="Enter your email address" value="{{ old('email') }}" required />
                                     @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
@@ -94,7 +94,7 @@ User Create - Admin Panel
                                     <label for="password" class="small mb-1">Password *</label>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter Password" required>
                                     @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -105,31 +105,53 @@ User Create - Admin Panel
                                     <label class="small mb-1" for="inputPhone">Phone *</label>
                                     <input class="form-control @error('phone') is-invalid @enderror" id="inputPhone" type="text" name="phone" placeholder="Enter phone number" required>
                                     @error('phone')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputSession">Session</label>
-                                    <input class="form-control" id="inputSession" type="text" name="session" placeholder="Enter session">
+                                    <select id="session" name="session" class="form-select @error('session') is-invalid @enderror" required>
+                                        @php
+                                        $currentYear = date('Y');
+                                        $startYear = 2015; // Starting from 2015-2016
+                                        @endphp
+                                        @for ($year = $startYear; $year <= $currentYear; $year++)
+                                            <option value="{{ $year }}-{{ $year + 1 }}" {{ old('session') == "$year-" . ($year + 1) ? 'selected' : '' }}>
+                                            {{ $year }}-{{ $year + 1 }}
+                                            </option>
+                                            @endfor
+                                    </select>
+                                    @error('session')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                             </div>
 
                             <!-- Form Row (department and gender)-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="inputDepartment">Department</label>
-                                    <input class="form-control" id="inputDepartment" type="text" name="department" placeholder="Enter department">
+                                    <label class="small mb-1" for="inputDepartment">Department *</label>
+                                    <select class="form-select @error('department') is-invalid @enderror" id="inputDepartment" name="department" required>
+                                        <option value="">Select Department</option>
+                                        @foreach($departments as $department)
+                                        <option value="{{ $department }}" {{ old('department') == $department ? 'selected' : '' }}>{{ $department }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('department')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputGender">Gender</label>
                                     <select class="form-select @error('gender') is-invalid @enderror" id="inputGender" name="gender">
                                         <option value="">Select gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="other">Other</option>
+                                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                                        <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                     @error('gender')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -140,7 +162,7 @@ User Create - Admin Panel
                                     <label class="small mb-1" for="inputDateOfBirth">Date of Birth</label>
                                     <input class="form-control @error('date_of_birth') is-invalid @enderror" id="inputDateOfBirth" type="date" name="date_of_birth">
                                     @error('date_of_birth')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
@@ -157,7 +179,7 @@ User Create - Admin Panel
                                         <option value="AB-">AB-</option>
                                     </select>
                                     @error('blood_group')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -204,7 +226,7 @@ User Create - Admin Panel
                                     <label class="small mb-1" for="inputTransactionId">Transaction ID *</label>
                                     <input class="form-control @error('transaction_id') is-invalid @enderror" id="inputTransactionId" type="text" name="transaction_id" placeholder="Enter transaction ID" required>
                                     @error('transaction_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>

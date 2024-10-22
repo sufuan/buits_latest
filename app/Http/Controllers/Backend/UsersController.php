@@ -61,12 +61,40 @@ class UsersController extends Controller
     // Show the form for creating a new user
     public function create()
     {
-        return view('backend.pages.users.create');
+
+
+        $departments = [
+            'Marketing',
+            'Law',
+            'Mathematics',
+            'Physics',
+            'History & Civilization',
+            'Soil & Environmental Sciences',
+            'Economics',
+            'Geology & Mining',
+            'Management Studies',
+            'Statistics',
+            'Chemistry',
+            'Coastal Studies and Disaster Management',
+            'Accounting & Information Systems',
+            'Computer Science and Engineering',
+            'Sociology',
+            'Botany',
+            'Public Administration',
+            'Philosophy',
+            'Political Science',
+            'Biochemistry and Biotechnology',
+            'Finance and Banking',
+            'Mass Communication and Journalism',
+            'English',
+            'Bangla',
+        ];
+        return view('backend.pages.users.create', compact('departments'));
     }
 
 
 
-    public function store(Request $request)
+    public function store(Request $request) 
     {
         // Validation logic here
         $request->validate([
@@ -74,43 +102,139 @@ class UsersController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
+            'department' => 'required',
+            'session' => 'required',
+            'phone' => 'required',
+            'date_of_birth' => 'required|date',
+            'blood_group' => 'required',
+            'class_roll' => 'required|string',
+            'father_name' => 'required|string',
+            'mother_name' => 'required|string',
+            'current_address' => 'required|string',
+            'permanent_address' => 'nullable|string',
+            'skills' => 'nullable|string',
+            'transaction_id' => 'required|string',
         ]);
-
+    
         // Handle image upload and resizing
         $imagePath = null;
         if ($request->file('image')) {
-
-
             $manager = new ImageManager(new Driver());
-
-
+            
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension(); // Generate unique file name
-
-
+    
             $image = $manager->read($image);
             $image->resize(300, 300);
-            $image->toJpeg(75)->save(base_path('public/images/users/profile/'. $imageName));
-            $imagePath = ('public/images/users/profile/'. $imageName);
+            $image->toJpeg(75)->save(base_path('public/images/users/profile/' . $imageName));
+            $imagePath = 'images/users/profile/' . $imageName; // Store relative path
         }
+    
+        // Generate the new member ID
+        $memberId = $this->generateNewMemberId((object) [
+            'department' => $request->department,
+            'session' => $request->session,
+        ]);
 
+        Log::info('Generated Member ID: ' . $memberId);
+    
         // Create a new user and save the image path in the database if applicable
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'image' => $imagePath, // Save the image path in the database
+            'department' => $request->department,
+            'session' => $request->session,
+            'phone' => $request->phone,
+            'date_of_birth' => $request->date_of_birth,
+            'blood_group' => $request->blood_group,
+            'class_roll' => $request->class_roll,
+            'father_name' => $request->father_name,
+            'mother_name' => $request->mother_name,
+            'current_address' => $request->current_address,
+            'permanent_address' => $request->permanent_address,
+            'skills' => $request->skills,
+            'transaction_id' => $request->transaction_id,
+            'member_id' => $memberId, // Add member_id to the user
         ]);
-
+    
         // Redirect to the users index
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
+    
+    
 
 
 
 
+    private function generateNewMemberId($volunteer)
+    {
+        // Define department codes
+        $departmentCodes = [
+            "Marketing" => "04",
+            "Law" => "15",
+            "Mathematics" => "05",
+            "Physics" => "18",
+            "History & Civilization" => "23",
+            "Soil & Environmental Sciences" => "10",
+            "Economics" => "01",
+            "Geology & Mining" => "17",
+            "Management Studies" => "03",
+            "Statistics" => "24",
+            "Chemistry" => "12",
+            "Coastal Studies and Disaster Management" => "19",
+            "Accounting & Information Systems" => "07",
+            "Computer Science and Engineering" => "13",
+            "Sociology" => "06",
+            "Botany" => "11",
+            "Public Administration" => "09",
+            "Philosophy" => "20",
+            "Political Science" => "16",
+            "Biochemistry and Biotechnology" => "21",
+            "Finance and Banking" => "14",
+            "Mass Communication and Journalism" => "22",
+            "English" => "02",
+            "Bangla" => "08"
+        ];
 
+        // Get department code
+        $departmentCode = $departmentCodes[$volunteer->department] ?? null;
 
+        // Check if the department code is valid
+        if (!$departmentCode) {
+            throw new \Exception('Invalid department.');
+        }
+
+        // Extract last two digits of the session (assuming session format is YYYY-YYYY)
+        $sessionYear = explode('-', $volunteer->session);
+        $lastTwoDigitsOfSession = substr(end($sessionYear), -2);
+
+        // Generate the new member ID
+        return $this->generateNewMemberIdHelper($departmentCode, $lastTwoDigitsOfSession);
+    }
+
+    private function generateNewMemberIdHelper($departmentCode, $lastTwoDigitsOfSession)
+    {
+        // Fetch the last member ID by ordering the users table by 'id' in descending order
+        $lastMember = User::orderBy('id', 'desc')->first();
+
+        // Initialize the default starting number
+        $newFormNumber = 1130;
+
+        if ($lastMember) {
+            // Extract the last four digits of the member_id from the last record
+            $lastFormNumber = (int)substr($lastMember->member_id, -4);
+
+            // Increment the last form number by 1
+            $newFormNumber = $lastFormNumber + 1;
+        }
+
+        // Return the new member ID with department code, session year, and the new form number
+        $newMemberId = $departmentCode . $lastTwoDigitsOfSession . str_pad($newFormNumber, 4, '0', STR_PAD_LEFT);
+
+        return $newMemberId;
+    }
 
 
 
