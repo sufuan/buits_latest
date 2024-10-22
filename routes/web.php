@@ -103,6 +103,18 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 Route::group(['prefix' => 'admin'], function () {
+    Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
+
+
+
+
+
+
+
+
+
+
+
     Route::get('/settings/frontend/promotional-section', [LandingPageController::class, 'promotionalSection'])->name('promotional-section');
     Route::post('/settings/frontend/promotional-section', [LandingPageController::class, 'storePromotionalBanner'])->name('promotional-banner.store');
     Route::get('/settings/frontend/promotional-section/edit/{id}', [LandingPageController::class, 'editPromotionalBanner'])->name('promotional-banner.edit');
@@ -162,7 +174,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('users/import-excel', 'Backend\UsersController@importExcel')->name('admin.users.import.excel');
     Route::get('users/bulk-import', 'Backend\UsersController@importView')->name('admin.users.import.view');
     Route::get('/users/export', 'Backend\UsersController@export')->name('admin.users.export');
-    Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::post('users/{id}/uploadImage', 'Backend\UsersController@uploadImage')->name('admin.users.uploadImage');
 
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);

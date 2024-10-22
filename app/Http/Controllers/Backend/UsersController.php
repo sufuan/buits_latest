@@ -104,81 +104,10 @@ class UsersController extends Controller
 
 
 
-    public function store(Request $request)
-    {
-        // Validation logic here
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
-            'department' => 'required',
-            'session' => 'required',
-            'phone' => 'required',
-            'date_of_birth' => 'required|date',
-            'blood_group' => 'required',
-            'class_roll' => 'required|string',
-            'father_name' => 'required|string',
-            'mother_name' => 'required|string',
-            'current_address' => 'required|string',
-            'permanent_address' => 'nullable|string',
-            'skills' => 'nullable|string',
-            'transaction_id' => 'required|string',
-        ]);
-
-        // Handle image upload and resizing
-        $imagePath = null;
-        if ($request->file('image')) {
-            $manager = new ImageManager(new Driver());
-
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension(); // Generate unique file name
-
-            $image = $manager->read($image);
-            $image->resize(300, 300);
-            $image->toJpeg(75)->save(base_path('public/images/users/profile/' . $imageName));
-            $imagePath = 'images/users/profile/' . $imageName; // Store relative path
-        }
-
-        // Generate the new member ID
-        $memberId = $this->generateNewMemberId((object) [
-            'department' => $request->department,
-            'session' => $request->session,
-        ]);
-
-        Log::info('Generated Member ID: ' . $memberId);
-
-        // Create a new user and save the image path in the database if applicable
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'image' => $imagePath, // Save the image path in the database
-            'department' => $request->department,
-            'session' => $request->session,
-            'phone' => $request->phone,
-            'date_of_birth' => $request->date_of_birth,
-            'blood_group' => $request->blood_group,
-            'class_roll' => $request->class_roll,
-            'father_name' => $request->father_name,
-            'mother_name' => $request->mother_name,
-            'current_address' => $request->current_address,
-            'permanent_address' => $request->permanent_address,
-            'skills' => $request->skills,
-            'transaction_id' => $request->transaction_id,
-            'member_id' => $memberId, // Add member_id to the user
-        ]);
-
-        // Redirect to the users index
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
-    }
 
 
 
-
-
-
-    private function generateNewMemberId($volunteer)
+    private function generateNewMemberId($volunteer, $isUpdate = false, $existingMemberId = null)
     {
         // Define department codes
         $departmentCodes = [
@@ -220,11 +149,22 @@ class UsersController extends Controller
         $sessionYear = explode('-', $volunteer->session);
         $lastTwoDigitsOfSession = substr(end($sessionYear), -2);
 
-        // Generate the new member ID
-        return $this->generateNewMemberIdHelper($departmentCode, $lastTwoDigitsOfSession);
+        // If this is an update, preserve the last form number and only update the department and session
+        if ($isUpdate && $existingMemberId) {
+            // Extract the last form number from the existing member ID (last 4 digits)
+            $lastFormNumber = substr($existingMemberId, -4);
+        } else {
+            // For new users, generate a new form number
+            $lastFormNumber = $this->getNewFormNumber();
+        }
+
+        // Return the new member ID with department code, session year, and the form number
+        $newMemberId = $departmentCode . $lastTwoDigitsOfSession . $lastFormNumber;
+
+        return $newMemberId;
     }
 
-    private function generateNewMemberIdHelper($departmentCode, $lastTwoDigitsOfSession)
+    private function getNewFormNumber()
     {
         // Fetch the last member ID by ordering the users table by 'id' in descending order
         $lastMember = User::orderBy('id', 'desc')->first();
@@ -236,19 +176,147 @@ class UsersController extends Controller
             // Extract the last four digits of the member_id from the last record
             $lastFormNumber = (int)substr($lastMember->member_id, -4);
 
-            // Increment the last form number by 1
+            // Increment the last form number by 1 (only for new user creation)
             $newFormNumber = $lastFormNumber + 1;
         }
 
-        // Return the new member ID with department code, session year, and the new form number
-        $newMemberId = $departmentCode . $lastTwoDigitsOfSession . str_pad($newFormNumber, 4, '0', STR_PAD_LEFT);
-
-        return $newMemberId;
+        // Return the new form number, padded to 4 digits
+        return str_pad($newFormNumber, 4, '0', STR_PAD_LEFT);
     }
 
+    public function store(Request $request)
+    {
+        // Validation logic here
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
+            'department' => 'required',
+            'session' => 'required',
+            'phone' => 'required',
+            'date_of_birth' => 'required|date',
+            'blood_group' => 'required',
+            'class_roll' => 'required|string',
+            'father_name' => 'required|string',
+            'mother_name' => 'required|string',
+            'current_address' => 'required|string',
+            'permanent_address' => 'nullable|string',
+            'skills' => 'nullable|string',
+            'transaction_id' => 'required|string',
+        ]);
 
+        // Handle image upload and resizing
+        $imagePath = null;
+        if ($request->file('image')) {
+            $manager = new ImageManager();
 
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension(); // Generate unique file name
 
+            $image = $manager->make($image)->resize(300, 300);
+            $image->save(public_path('images/users/profile/' . $imageName));
+            $imagePath = 'images/users/profile/' . $imageName; // Store relative path
+        }
+
+        // Generate the new member ID (for new user creation)
+        $memberId = $this->generateNewMemberId((object)[
+            'department' => $request->department,
+            'session' => $request->session,
+        ]);
+
+        Log::info('Generated Member ID: ' . $memberId);
+
+        // Create a new user and save the image path in the database if applicable
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'image' => $imagePath, // Save the image path in the database
+            'department' => $request->department,
+            'session' => $request->session,
+            'phone' => $request->phone,
+            'date_of_birth' => $request->date_of_birth,
+            'blood_group' => $request->blood_group,
+            'class_roll' => $request->class_roll,
+            'father_name' => $request->father_name,
+            'mother_name' => $request->mother_name,
+            'current_address' => $request->current_address,
+            'permanent_address' => $request->permanent_address,
+            'skills' => $request->skills,
+            'transaction_id' => $request->transaction_id,
+            'member_id' => $memberId, // Add member_id to the user
+        ]);
+
+        // Redirect to the users index
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
+    }
+
+    // Update the specified user in storage
+    public function update(Request $request, User $user)
+    {
+        // Validation logic here
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6', // Ensure password validation
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
+            'department' => 'required',
+            'session' => 'required',
+            'phone' => 'nullable|string|max:15',
+            'date_of_birth' => 'nullable|date',
+            'blood_group' => 'nullable|string',
+            'class_roll' => 'nullable|string',
+            'father_name' => 'nullable|string',
+            'mother_name' => 'nullable|string',
+            'current_address' => 'nullable|string',
+            'permanent_address' => 'nullable|string',
+            'skills' => 'nullable|string',
+            'transaction_id' => 'nullable|string',
+        ]);
+
+        // Handle the image upload if an image is provided
+        $imagePath = $user->image; // Default to existing image path
+        if ($request->hasFile('image')) {
+            // Store the new image and get the path
+            $imageName = time() . '.' . $request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(public_path('images/users/profile'), $imageName);
+            $imagePath = 'images/users/profile/' . $imageName;
+        }
+
+        // Check if department or session has changed to update member_id
+        if ($user->department !== $request->department || $user->session !== $request->session) {
+            $memberId = $this->generateNewMemberId((object)[
+                'department' => $request->department,
+                'session' => $request->session,
+            ], true, $user->member_id);
+        } else {
+            $memberId = $user->member_id; // Keep existing member_id
+        }
+
+        // Update user details
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->filled('password') ? bcrypt($request->password) : $user->password, // Only update password if provided
+            'image' => $imagePath, // Save the image path
+            'department' => $request->department,
+            'session' => $request->session,
+            'phone' => $request->phone,
+            'date_of_birth' => $request->date_of_birth,
+            'blood_group' => $request->blood_group,
+            'class_roll' => $request->class_roll,
+            'father_name' => $request->father_name,
+            'mother_name' => $request->mother_name,
+            'current_address' => $request->current_address,
+            'permanent_address' => $request->permanent_address,
+            'skills' => $request->skills,
+            'transaction_id' => $request->transaction_id,
+            'member_id' => $memberId, // Update member_id accordingly
+        ]);
+
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+    }
 
 
 
@@ -272,60 +340,10 @@ class UsersController extends Controller
         return view('backend.pages.users.edit', compact('user', 'departments'));
     }
 
-    // Update the specified user in storage
-    public function update(Request $request, User $user)
-    {
-        // Validation logic here
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|min:6', // Ensure password validation
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
-            // Add additional validation rules for other fields as needed
-            'department' => 'required',
-            'session' => 'required',
-            'phone' => 'nullable|string|max:15',
-            'date_of_birth' => 'nullable|date',
-            'blood_group' => 'nullable|string',
-            'class_roll' => 'nullable|string',
-            'father_name' => 'nullable|string',
-            'mother_name' => 'nullable|string',
-            'current_address' => 'nullable|string',
-            'permanent_address' => 'nullable|string',
-            'skills' => 'nullable|string',
-            'transaction_id' => 'nullable|string',
-        ]);
 
-        // Handle the image upload if an image is provided
-        $imagePath = $user->image; // Default to existing image path
-        if ($request->hasFile('image')) {
-            // Store the new image and get the path
-            $imagePath = $request->file('image')->store('images', 'public');
-        }
 
-        // Update user details
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->filled('password') ? bcrypt($request->password) : $user->password, // Only update password if provided
-            'image' => $imagePath, // Save the image path
-            'department' => $request->department,
-            'session' => $request->session,
-            'phone' => $request->phone,
-            'date_of_birth' => $request->date_of_birth,
-            'blood_group' => $request->blood_group,
-            'class_roll' => $request->class_roll,
-            'father_name' => $request->father_name,
-            'mother_name' => $request->mother_name,
-            'current_address' => $request->current_address,
-            'permanent_address' => $request->permanent_address,
-            'skills' => $request->skills,
-            'transaction_id' => $request->transaction_id,
-            'member_id' => $user->member_id, // Assuming member_id is unchanged; adjust if needed
-        ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
-    }
+
 
     // Remove the specified user from storage
     public function destroy(User $user)
@@ -394,3 +412,19 @@ class UsersController extends Controller
         return Excel::download(new UsersExport, 'users.xlsx'); // Export the user data as an Excel file
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
