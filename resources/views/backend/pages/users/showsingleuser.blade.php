@@ -52,8 +52,9 @@
                     <div class="card-header">Profile Picture</div>
                     <div class="card-body text-center">
                         <!-- Profile picture image-->
-                        <img class="img-account-profile rounded-circle mb-2" src="{{ asset('assets/img/demo/user-placeholder.svg') }}" alt="{{ $user->name }}" />
-                        <!-- Profile picture help block-->
+                        <img class="img-account-profile rounded-circle mb-2" 
+                             src="{{ asset($user->image ?? 'assets/img/demo/user-placeholder.svg') }}" 
+                             alt="{{ $user->name }}" />
                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                     </div>
                 </div>
@@ -98,11 +99,32 @@
                             </div>
                         </div>
 
-                        <!-- Additional Fields -->
                         <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">Date of Birth</label>
+                                <p class="form-control-static">{{ $user->date_of_birth }}</p>
+                            </div>
                             <div class="col-md-6">
                                 <label class="small mb-1">Blood Group</label>
                                 <p class="form-control-static">{{ $user->blood_group }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">Class Roll</label>
+                                <p class="form-control-static">{{ $user->class_roll }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1">Father's Name</label>
+                                <p class="form-control-static">{{ $user->father_name }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">Mother's Name</label>
+                                <p class="form-control-static">{{ $user->mother_name }}</p>
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1">Current Address</label>
@@ -112,12 +134,23 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
+                                <label class="small mb-1">Permanent Address</label>
+                                <p class="form-control-static">{{ $user->permanent_address }}</p>
+                            </div>
+                            <div class="col-md-6">
                                 <label class="small mb-1">Skills</label>
                                 <p class="form-control-static">{{ $user->skills }}</p>
                             </div>
+                        </div>
+
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1">Transaction ID</label>
                                 <p class="form-control-static">{{ $user->transaction_id }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1">Member ID</label>
+                                <p class="form-control-static">{{ $user->member_id }}</p>
                             </div>
                         </div>
 

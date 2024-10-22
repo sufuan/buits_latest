@@ -58,12 +58,10 @@ class UsersController extends Controller
         return view('backend.pages.users.index', compact('users'));
     }
 
-    // Show the form for creating a new user
-    public function create()
+
+    private function getDepartments()
     {
-
-
-        $departments = [
+        return [
             'Marketing',
             'Law',
             'Mathematics',
@@ -89,6 +87,18 @@ class UsersController extends Controller
             'English',
             'Bangla',
         ];
+    }
+
+
+
+
+
+
+    // Show the form for creating a new user
+    public function create()
+    {
+
+        $departments = $this->getDepartments();
         return view('backend.pages.users.create', compact('departments'));
     }
 
@@ -254,10 +264,12 @@ class UsersController extends Controller
     }
 
 
-    // Show the form for editing the specified user
-    public function edit(User $user)
+    public function edit($id)
     {
-        return view('backend.pages.users.edit', compact('user'));
+        $user = User::findOrFail($id);
+        $departments = $this->getDepartments();
+
+        return view('backend.pages.users.edit', compact('user', 'departments'));
     }
 
     // Update the specified user in storage
@@ -267,17 +279,49 @@ class UsersController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6', // Ensure password validation
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validate image
+            // Add additional validation rules for other fields as needed
+            'department' => 'required',
+            'session' => 'required',
+            'phone' => 'nullable|string|max:15',
+            'date_of_birth' => 'nullable|date',
+            'blood_group' => 'nullable|string',
+            'class_roll' => 'nullable|string',
+            'father_name' => 'nullable|string',
+            'mother_name' => 'nullable|string',
+            'current_address' => 'nullable|string',
+            'permanent_address' => 'nullable|string',
+            'skills' => 'nullable|string',
+            'transaction_id' => 'nullable|string',
         ]);
 
-
-
-
+        // Handle the image upload if an image is provided
+        $imagePath = $user->image; // Default to existing image path
+        if ($request->hasFile('image')) {
+            // Store the new image and get the path
+            $imagePath = $request->file('image')->store('images', 'public');
+        }
 
         // Update user details
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'password' => $request->filled('password') ? bcrypt($request->password) : $user->password, // Only update password if provided
+            'image' => $imagePath, // Save the image path
+            'department' => $request->department,
+            'session' => $request->session,
+            'phone' => $request->phone,
+            'date_of_birth' => $request->date_of_birth,
+            'blood_group' => $request->blood_group,
+            'class_roll' => $request->class_roll,
+            'father_name' => $request->father_name,
+            'mother_name' => $request->mother_name,
+            'current_address' => $request->current_address,
+            'permanent_address' => $request->permanent_address,
+            'skills' => $request->skills,
+            'transaction_id' => $request->transaction_id,
+            'member_id' => $user->member_id, // Assuming member_id is unchanged; adjust if needed
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
