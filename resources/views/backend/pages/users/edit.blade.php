@@ -102,9 +102,20 @@ User Edit - Admin Panel
                                     <input class="form-control" id="inputPhone" type="text" name="phone" placeholder="Enter Phone" value="{{ $user->phone }}" />
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="inputSession">Session</label>
-                                    <input class="form-control" id="inputSession" type="text" name="session" placeholder="Enter Session" value="{{ $user->session }}" />
+                                    <label class="small mb-1" for="session">Session</label>
+                                    <select id="session" name="session" class="form-control" required>
+                                        @php
+                                        $currentYear = date('Y');
+                                        $startYear = 2015; // Starting from 2015-2016
+                                        @endphp
+                                        @for ($year = $startYear; $year <= $currentYear; $year++)
+                                            <option value="{{ $year }}-{{ $year + 1 }}" {{ $user->session == "{$year}-" . ($year + 1) ? 'selected' : '' }}>
+                                            {{ $year }}-{{ $year + 1 }}
+                                            </option>
+                                            @endfor
+                                    </select>
                                 </div>
+
                             </div>
 
 
