@@ -105,38 +105,126 @@
         }
     };
 
-
     function initTable() {
     $table.bootstrapTable({
         height: 580,
         locale: 'en-US',
         columns: [
-            { field: 'member_id', title: 'Member Id', sortable: true, align: 'center' },
+            { 
+                field: 'member_id', 
+                title: 'Member Id', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
             { 
                 field: 'name', 
                 title: 'Name', 
                 sortable: true, 
                 align: 'center',
                 formatter: function(value, row, index) {
+                    if (row.deleted_at) {
+                        return '<span class="text-danger">User has been deleted</span>';
+                    }
                     var url = "{{ url('admin/users') }}/" + row.id;
                     return '<a href="' + url + '" title="View User">' + value + '</a>';
                 }
             },
-            { field: 'email', title: 'Email', sortable: true, align: 'center' },
-            { field: 'phone', title: 'Phone', sortable: true, align: 'center' },
-            { field: 'usertype', title: 'User Type', sortable: true, align: 'center' },
-            { field: 'session', title: 'Session', sortable: true, align: 'center' },
-            { field: 'department', title: 'Department', sortable: true, align: 'center' },
-            { field: 'transaction_id', title: 'Transaction ID', sortable: true, align: 'center' },
-            { field: 'gender', title: 'Gender', sortable: true, align: 'center' },
-            { field: 'blood_group', title: 'Blood Group', sortable: true, align: 'center' },
-            { field: 'current_address', title: 'Current Address', sortable: true, align: 'center' },
-            { field: 'skills', title: 'Skills', sortable: true, align: 'center' },
+            { 
+                field: 'email', 
+                title: 'Email', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'phone', 
+                title: 'Phone', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'usertype', 
+                title: 'User Type', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'session', 
+                title: 'Session', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'department', 
+                title: 'Department', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'transaction_id', 
+                title: 'Transaction ID', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'gender', 
+                title: 'Gender', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'blood_group', 
+                title: 'Blood Group', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'current_address', 
+                title: 'Current Address', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            },
+            { 
+                field: 'skills', 
+                title: 'Skills', 
+                sortable: true, 
+                align: 'center',
+                formatter: function(value, row, index) {
+                    return row.deleted_at ? '<span class="text-danger">User has been deleted</span>' : value;
+                }
+            }
         ]
     });
 }
-
-
 
     $(function() {
         initTable();

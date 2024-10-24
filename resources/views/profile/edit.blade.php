@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Edit Profile - {{ $user->name }}
+Edit Profile - {{ $user->name }}
 @endsection
 
 @section('styles')
@@ -29,12 +29,7 @@
                             Edit User - {{ $user->name }}
                         </h1>
                     </div>
-                    <div class="col-12 col-xl-auto mb-3">
-                        <a class="btn btn-sm btn-light text-primary" href="{{ route('admin.users.index') }}">
-                            <i class="me-1" data-feather="arrow-left"></i>
-                            Back to Users List
-                        </a>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -68,7 +63,7 @@
                 <div class="card mb-4">
                     <div class="card-header">Account Details</div>
                     <div class="card-body">
-                    <form action="{{ route('profile.update') }}" method="POST">
+                        <form action="{{ route('profile.update') }}" method="POST">
                             @method('PATCH') <!-- Changed to PATCH for updating -->
                             @csrf
                             <!-- Form Row-->
@@ -103,11 +98,19 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputSession">Session</label>
-                                    <input class="form-control" id="inputSession" type="text" name="session" placeholder="Enter Session" value="{{ $user->session }}" />
+                                    <select id="session" name="session" class="block mt-1 w-full bg-white" required>
+                                        @php
+                                        $currentYear = date('Y');
+                                        $startYear = 2015; // Starting from 2015-2016
+                                        @endphp
+                                        @for ($year = $startYear; $year <= $currentYear; $year++)
+                                            <option value="{{ $year }}-{{ $year + 1 }}">{{ $year }}-{{ $year + 1 }}</option>
+                                            @endfor
+                                    </select>
                                 </div>
                             </div>
                             <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
+                                <div class="col-md-6">
                                     <label class="small mb-1" for="inputDepartment">Department</label>
                                     <select id="inputDepartment" name="department" class="form-control" required>
                                         @foreach ($departments as $department)
@@ -122,7 +125,6 @@
                                     <select name="gender" id="inputGender" class="form-control">
                                         <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>Male</option>
                                         <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>Female</option>
-                                        <option value="other" {{ $user->gender == 'other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                 </div>
                             </div>
@@ -194,6 +196,3 @@
     </div>
 </main>
 @endsection
-
-
-

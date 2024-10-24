@@ -3,70 +3,66 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\User; // Adjust if your User model is in a different namespace
+use App\Services\MemberIdService; // Make sure this service is created as shown earlier
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    protected $memberIdService;
+
+    // Inject the MemberIdService to handle member ID generation
+    public function __construct(MemberIdService $memberIdService)
+    {
+        $this->memberIdService = $memberIdService;
+    }
+
+    /**
+     * Get the list of departments.
+     */
+    private function getDepartments()
+    {
+        return [
+            'Marketing',
+            'Law',
+            'Mathematics',
+            'Physics',
+            'History & Civilization',
+            'Soil & Environmental Sciences',
+            'Economics',
+            'Geology & Mining',
+            'Management Studies',
+            'Statistics',
+            'Chemistry',
+            'Coastal Studies and Disaster Management',
+            'Accounting & Information Systems',
+            'Computer Science and Engineering',
+            'Sociology',
+            'Botany',
+            'Public Administration',
+            'Philosophy',
+            'Political Science',
+            'Biochemistry and Biotechnology',
+            'Finance and Banking',
+            'Mass Communication and Journalism',
+            'English',
+            'Bangla',
+        ];
+    }
+
     /**
      * Show the form for editing the authenticated user's profile.
-     *
-     * @return \Illuminate\Http\Response
      */
-
-
-
-
-
-     private function getDepartments()
-     {
-         return [
-             'Marketing',
-             'Law',
-             'Mathematics',
-             'Physics',
-             'History & Civilization',
-             'Soil & Environmental Sciences',
-             'Economics',
-             'Geology & Mining',
-             'Management Studies',
-             'Statistics',
-             'Chemistry',
-             'Coastal Studies and Disaster Management',
-             'Accounting & Information Systems',
-             'Computer Science and Engineering',
-             'Sociology',
-             'Botany',
-             'Public Administration',
-             'Philosophy',
-             'Political Science',
-             'Biochemistry and Biotechnology',
-             'Finance and Banking',
-             'Mass Communication and Journalism',
-             'English',
-             'Bangla',
-         ];
-     }
-
-
-
- 
     public function edit()
     {
         $user = Auth::user(); // Get the authenticated user
         $departments = $this->getDepartments();
-        return view('profile.edit', compact('user', 'departments')); // Correct view path
-
-      
+        return view('profile.edit', compact('user', 'departments'));
     }
 
     /**
      * Update the authenticated user's profile.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
@@ -90,6 +86,20 @@ class ProfileController extends Controller
             'permanent_address' => 'nullable',
             'skills' => 'nullable',
         ]);
+
+        // Check if department or session has changed
+        $departmentChanged = $user->department !== $request->department;
+        $sessionChanged = $user->session !== $request->session;
+
+        if ($departmentChanged || $sessionChanged) {
+            // If the department or session has changed, generate a new member ID
+            $newMemberId = $this->memberIdService->generateNewMemberId((object)[
+                'department' => $request->department,
+                'session' => $request->session,
+            ], true, $user->member_id);
+
+            $user->member_id = $newMemberId; // Update the member_id
+        }
 
         // Update user data
         $user->name = $request->name;
@@ -117,6 +127,6 @@ class ProfileController extends Controller
 
         // Flash success message and redirect back
         session()->flash('success', 'Profile has been updated successfully!');
-        return redirect()->route('profile.edit'); // Adjust the route as necessary
+        return redirect()->route('profile.edit');
     }
 }

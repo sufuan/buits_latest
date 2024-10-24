@@ -60,25 +60,20 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation
     public function model(array $row)
     {
         // Normalize the department name
-        $departmentName = $this->normalizeDepartmentName($row['department']);
+        $departmentName = $this->normalizeDepartmentName(trim($row['department']));
         $departmentCode = $this->departmentCodes[$departmentName] ?? null;
 
-        // Log the normalized department name for debugging
-        Log::info('Raw Department Name: ' . $row['department']); // Log the raw name
-        Log::info('Normalized Department Name: ' . $departmentName); // Log the normalized name
-        Log::info('Available Department Codes: ' . implode(', ', array_keys($this->departmentCodes))); // Log available codes
+       
 
         if (!$departmentCode) {
-            // Log the invalid department for further inspection
-            Log::error('Invalid department in the imported data: ' . $row['department']);
-            throw new \Exception('Invalid department in the imported data: ' . $row['department']);
+            throw new \Exception('Invalid department in the imported data: ' . trim($row['department']));
         }
 
-        $sessionYear = explode('-', $row['session']);
+        $sessionYear = explode('-', trim($row['session']));
         $lastTwoDigitsOfSession = substr(end($sessionYear), -2);
 
         // Check if member_id exists in the Excel row; if not, generate a new one
-        $memberId = $row['member_id'] ?? $this->generateNewMemberId($departmentCode, $lastTwoDigitsOfSession);
+        $memberId = trim($row['member_id']) ?? $this->generateNewMemberId($departmentCode, $lastTwoDigitsOfSession);
 
         // Ensure the member_id is unique
         $existingMember = User::where('member_id', $memberId)->first();
@@ -95,7 +90,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation
             'session'           => trim($row['session']),
             'department'        => trim($row['department']),
             'gender'            => trim($row['gender']),
-            'date_of_birth'     => Carbon::parse($row['date_of_birth']),
+            'date_of_birth'     => Carbon::parse(trim($row['date_of_birth'])),
             'blood_group'       => trim($row['blood_group']),
             'class_roll'        => trim($row['class_roll']),
             'father_name'       => trim($row['father_name']),
@@ -106,7 +101,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation
             'skills'            => trim($row['skills']),
             'transaction_id'    => trim($row['transaction_id']),
             'custom_form'       => trim($row['custom_form']),
-            'is_approved'       => $row['is_approved'],
+            'is_approved'       => trim($row['is_approved']),
             'member_id'         => $memberId,
         ]);
     }
@@ -145,8 +140,8 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation
             'password'          => 'required|min:6',
             'phone'             => 'required|max:15',
             'usertype'          => 'required|in:user,volunteer',
-            'date_of_birth'     => 'required',
-            'gender'            => 'required|in:male,female,other',
+            'date_of_birth'     => 'required', // Ensure it's a valid date
+            'gender'            => 'required|in:male,female', // Include "other"
             'session'           => 'required|max:20',
             'department'        => 'required|string|max:100',
             'blood_group'       => 'nullable|string|max:3',
@@ -178,7 +173,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation
             'usertype.in'              => 'Invalid user type provided.',
             'date_of_birth.date_format' => 'Date of birth must be in YYYY-MM-DD format.',
             'gender.required'          => 'Gender is required.',
-            'gender.in'                => 'Invalid gender value. Accepted values: male, female, other.',
+            'gender.in'                => 'Invalid gender value. Accepted values: male, female.',
         ];
     }
 }

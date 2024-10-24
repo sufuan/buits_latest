@@ -1,16 +1,16 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    User Profile - {{ $user->name }}
+User Profile - {{ $user->name }}
 @endsection
 
 @section('styles')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-    <style>
-        .form-check-label {
-            text-transform: capitalize;
-        }
-    </style>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .form-check-label {
+        text-transform: capitalize;
+    }
+</style>
 @endsection
 
 @section('admin-content')
@@ -52,9 +52,9 @@
                     <div class="card-header">Profile Picture</div>
                     <div class="card-body text-center">
                         <!-- Profile picture image-->
-                        <img class="img-account-profile rounded-circle mb-2" 
-                             src="{{ asset($user->image ?? 'assets/img/demo/user-placeholder.svg') }}" 
-                             alt="{{ $user->name }}" />
+                        <img class="img-account-profile rounded-circle mb-2"
+                            src="{{ asset($user->image ?? 'assets/img/demo/user-placeholder.svg') }}"
+                            alt="{{ $user->name }}" />
                         <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                     </div>
                 </div>
@@ -159,6 +159,37 @@
                 </div>
             </div>
         </div>
+
+        <div class="card mb-4 mb-xl-0">
+            <div class="card-header">Delete User</div>
+            <div class="card-body text-center">
+                <button class="btn btn-danger" id="deleteUserButton">Delete User</button>
+            </div>
+        </div>
     </div>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    $('#deleteUserButton').on('click', function () {
+        if (confirm('Are you sure you want to delete this user?')) {
+            $.ajax({
+                url: '{{ route("admin.users.destroy", $user->id) }}',
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('User deleted successfully.');
+                        window.location.href = '{{ route("admin.users.index") }}';
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error deleting user:', xhr.responseText);
+                }
+            });
+        }
+    });
+</script>
 @endsection

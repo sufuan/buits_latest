@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\NotificationController;
 use App\Http\Controllers\Backend\EmailSettingController;
 use App\Http\Controllers\Backend\LandingPageController;
 use App\Http\Controllers\menuController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -103,15 +104,6 @@ Route::post('/volunteer/register', [VolunteerController::class, 'register']);
 
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
-
-
-
-
-
-
-
-
 
 
 
