@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AdminNotificationMail;
+use App\Mail\UserApprovedMail;
 use App\PendingUser;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class UserApprovalController extends Controller
@@ -113,7 +116,7 @@ class UserApprovalController extends Controller
   
     
         // Create a new user based on the pending user's data
-        User::create([
+        $newUser = User::create([
             'name' => $pendingUser->name,
             'email' => $pendingUser->email,
             'password' =>$pendingUser->password, // Hash the password
@@ -137,6 +140,10 @@ class UserApprovalController extends Controller
         // Remove the pending user after successful approval
         $pendingUser->delete();
     
+
+        Mail::to($newUser->email)->send(new UserApprovedMail($newUser));
+        Mail::to('info.buits@gmail.com')->send(new AdminNotificationMail($newUser));
+
         return response()->json(['success' => true]);
     }
     
