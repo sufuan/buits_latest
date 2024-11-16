@@ -87,9 +87,7 @@
 
 <body>
     <div class="container">
-        <div class="logo">
-            <img src="https://via.placeholder.com/50" alt="Registration Icon">
-        </div>
+      
 
         <h1>Your Registration is Successful!</h1>
 
@@ -108,22 +106,20 @@
                 href="https://www.facebook.com/groups/buitsorg/?ref=share&mibextid=NSMWBT">https://www.facebook.com/groups/buitsorg/?ref=share&mibextid=NSMWBT</a>
         </p>
 
-        <img src="{{ asset('assets/img/logo.jpg') }}" alt="Logo" class="center-logo">
+        <img src="https://www.buits.org/assets/img/logo.png" width="150" height="150" alt="logo">
 
         <div class="footer">
-            <a href="#">Refund Policy</a> •
-            <a href="#">Cancelation Policy</a> •
-            <a href="#">Contact us</a>
+           
 
-            <div class="social-icons">
-                <a href="#"><img src="https://via.placeholder.com/24/Facebook" alt="Facebook"></a>
+            <!-- <div class="social-icons">
+                <a href="https://www.facebook.com/buitsorg/"><img src="https://via.placeholder.com/24/Facebook" alt="Facebook"></a>
                 <a href="#"><img src="https://via.placeholder.com/24/Instagram" alt="Instagram"></a>
                 <a href="#"><img src="https://via.placeholder.com/24/LinkedIn" alt="LinkedIn"></a>
                 <a href="#"><img src="https://via.placeholder.com/24/Pinterest" alt="Pinterest"></a>
-            </div>
+            </div> -->
 
             <div class="copyright">
-                &copy; 2023 Barishal University IT Society. All rights reserved.
+                &copy; 2024 Barishal University IT Society. All rights reserved.
             </div>
         </div>
     </div>

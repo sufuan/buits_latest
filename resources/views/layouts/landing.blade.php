@@ -233,12 +233,9 @@
 
 
         /* recent events page css */
-
-
-        
-
     </style>
 
+    @stack('styles')
 
 
 </head>
@@ -246,111 +243,111 @@
 <body>
 
 
-    @include('partials.header') <!-
+    @include('partials.header')
 
-        @yield('content')
-
-
+    @yield('content')
 
 
 
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-        <script src="{{ asset('assets/landing/js/jquery-3.6.0.min.js') }}"></script>
-        <script src="{{ asset('assets/landing/js/viewport.jquery.js') }}"></script>
-        <script src="{{ asset('assets/landing/js/wow.min.js') }}"></script>
-        <script src="{{ asset('assets/landing/js/odometer.min.js') }}"></script>
-        <script src="{{ asset('assets/landing/js/owl.min.js') }}"></script>
-        <script src="{{ asset('assets/landing/js/main.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/viewport.jquery.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/wow.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/odometer.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/owl.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/main.js') }}"></script>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                window.addEventListener('scroll', function() {
-                    const nav = document.querySelector('.navbar');
-                    if (window.scrollY > 30) {
-                        nav.classList.add('scrolled');
-                    } else {
-                        nav.classList.remove('scrolled');
-                    }
-                });
-
-                // Listen for the Bootstrap collapse event
-                const navbarCollapse = document.querySelector('#main_nav');
-                navbarCollapse.addEventListener('show.bs.collapse', function() {
-                    const nav = document.querySelector('.navbar');
-                    nav.classList.add('show'); // Add 'show' class when menu opens
-                });
-
-                navbarCollapse.addEventListener('hide.bs.collapse', function() {
-                    const nav = document.querySelector('.navbar');
-                    nav.classList.remove('show'); // Remove 'show' class when menu closes
-                });
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            window.addEventListener('scroll', function() {
+                const nav = document.querySelector('.navbar');
+                if (window.scrollY > 30) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
             });
 
-            $(document).ready(function() {
-                const $slider = $('.main-category-slider');
-
-                $slider.owlCarousel({
-                    loop: true,
-                    margin: 12,
-                    nav: false,
-                    autoplay: true,
-                    autoplayTimeout: 4000,
-                    autoplayHoverPause: true,
-                    responsive: {
-                        0: {
-                            items: 1
-                        },
-                        600: {
-                            items: 2
-                        },
-                        1000: {
-                            items: 1
-                        }
-                    }
-                });
-
-                // Adjust slide sizes when the carousel changes
-                $slider.on('translated.owl.carousel', function(event) {
-                    // Remove 'big-slide' class from all slides
-                    $('.category-slide-item').removeClass('big-slide').addClass('small-slide');
-
-                    // Get the index of the current active item
-                    const currentIndex = event.item.index;
-
-                    // Add 'big-slide' class to the current active item
-                    $slider.find('.owl-item').eq(currentIndex).find('.category-slide-item').removeClass('small-slide').addClass('big-slide');
-                });
-
-                // Initial adjustment when the page loads
-                const initialIndex = 0; // Assuming first slide starts at 0
-                $slider.find('.owl-item').eq(initialIndex).find('.category-slide-item').removeClass('small-slide').addClass('big-slide');
+            // Listen for the Bootstrap collapse event
+            const navbarCollapse = document.querySelector('#main_nav');
+            navbarCollapse.addEventListener('show.bs.collapse', function() {
+                const nav = document.querySelector('.navbar');
+                nav.classList.add('show'); // Add 'show' class when menu opens
             });
-        </script>
 
-        <script>
-            $('.brand-carousel').owlCarousel({
+            navbarCollapse.addEventListener('hide.bs.collapse', function() {
+                const nav = document.querySelector('.navbar');
+                nav.classList.remove('show'); // Remove 'show' class when menu closes
+            });
+        });
+
+        $(document).ready(function() {
+            const $slider = $('.main-category-slider');
+
+            $slider.owlCarousel({
                 loop: true,
-                margin: -5, // Decrease margin further between items
-                stagePadding: 0,
+                margin: 12,
+                nav: false,
                 autoplay: true,
+                autoplayTimeout: 4000,
+                autoplayHoverPause: true,
                 responsive: {
                     0: {
                         items: 1
                     },
                     600: {
-                        items: 3
+                        items: 2
                     },
                     1000: {
-                        items: 5
+                        items: 1
                     }
                 }
             });
-        </script>
 
-        @stack('scripts')
+            // Adjust slide sizes when the carousel changes
+            $slider.on('translated.owl.carousel', function(event) {
+                // Remove 'big-slide' class from all slides
+                $('.category-slide-item').removeClass('big-slide').addClass('small-slide');
+
+                // Get the index of the current active item
+                const currentIndex = event.item.index;
+
+                // Add 'big-slide' class to the current active item
+                $slider.find('.owl-item').eq(currentIndex).find('.category-slide-item').removeClass('small-slide').addClass('big-slide');
+            });
+
+            // Initial adjustment when the page loads
+            const initialIndex = 0; // Assuming first slide starts at 0
+            $slider.find('.owl-item').eq(initialIndex).find('.category-slide-item').removeClass('small-slide').addClass('big-slide');
+        });
+    </script>
+
+    <script>
+        $('.brand-carousel').owlCarousel({
+            loop: true,
+            margin: -5, // Decrease margin further between items
+            stagePadding: 0,
+            autoplay: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                },
+                1000: {
+                    items: 5
+                }
+            }
+        });
+    </script>
+
+    @stack('scripts')
 
 </body>
 

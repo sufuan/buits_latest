@@ -53,7 +53,6 @@ class UserApprovalController extends Controller
         // Return the view with users
         return view('backend.pages.users.newuserrequest', compact('users'));
     }
-
     public function approve($id)
     {
         // Fetch the pending user by ID
@@ -113,40 +112,45 @@ class UserApprovalController extends Controller
         // Generate the new member ID
         $memberId = $this->generateNewMemberId($departmentCode, $lastTwoDigitsOfSession);
     
-  
+        try {
+            // Create a new user based on the pending user's data
+            $newUser = User::create([
+                'name' => $pendingUser->name,
+                'email' => $pendingUser->email,
+                'password' => bcrypt($pendingUser->password), // Ensure the password is hashed
+                'phone' => $pendingUser->phone,
+                'department' => $pendingUser->department,
+                'session' => $pendingUser->session,
+                'usertype' => $pendingUser->usertype,
+                'gender' => $pendingUser->gender,
+                'date_of_birth' => $pendingUser->date_of_birth,
+                'blood_group' => $pendingUser->blood_group,
+                'class_roll' => $pendingUser->class_roll,
+                'father_name' => $pendingUser->father_name,
+                'mother_name' => $pendingUser->mother_name,
+                'current_address' => $pendingUser->current_address,
+                'permanent_address' => $pendingUser->permanent_address,
+                'member_id' => $memberId, // Assign the generated member_id
+                'transaction_id' => $pendingUser->transaction_id,
+                'to_account' => $pendingUser->to_account,
+                'is_approved' => true,
+            ]);
     
-        // Create a new user based on the pending user's data
-        $newUser = User::create([
-            'name' => $pendingUser->name,
-            'email' => $pendingUser->email,
-            'password' =>$pendingUser->password, // Hash the password
-            'phone' => $pendingUser->phone,
-            'department' => $pendingUser->department,
-            'session' => $pendingUser->session,
-            'usertype' => $pendingUser->usertype,
-            'gender' => $pendingUser->gender,
-            'date_of_birth' => $pendingUser->date_of_birth,
-            'blood_group' => $pendingUser->blood_group,
-            'class_roll' => $pendingUser->class_roll,
-            'father_name' => $pendingUser->father_name,
-            'mother_name' => $pendingUser->mother_name,
-            'current_address' => $pendingUser->current_address,
-            'permanent_address' => $pendingUser->permanent_address,
-            'member_id' => $memberId, // Assign the generated member_id
-            'transaction_id' => $pendingUser->transaction_id,
-            'to_account' => $pendingUser->to_account,
-            'is_approved' => true,
-        ]);
+            // Send approval emails
+            Mail::to($newUser->email)->send(new UserApprovedMail($newUser));
+            Mail::to('info.buits@gmail.com')->send(new AdminNotificationMail($newUser));
     
-        // Remove the pending user after successful approval
-        $pendingUser->delete();
+            // Remove the pending user after successful approval
+            $pendingUser->delete();
     
-
-        Mail::to($newUser->email)->send(new UserApprovedMail($newUser));
-        Mail::to('info.buits@gmail.com')->send(new AdminNotificationMail($newUser));
-
-        return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
+    
+        } catch (\Exception $e) {
+            // If an error occurs, return a failure response and ensure no data is lost
+            return response()->json(['error' => 'An error occurred during approval: ' . $e->getMessage()], 500);
+        }
     }
+    
     
     /**
      * Generate a new unique member ID based on the highest numeric part across all member IDs.
