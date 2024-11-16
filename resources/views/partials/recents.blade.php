@@ -48,8 +48,8 @@
 
 .card__title {
   padding: 0;
-  margin: 0;
-  font-size: 60px;
+  margin: 15px;
+  font-size: 40px;
   font-weight: 600;
   color: #16263a;
 }
@@ -93,7 +93,7 @@
   }
 
   .card__content {
-    padding: 30px 20px;
+    padding: 20px 20px;
   }
 }
 
@@ -108,17 +108,14 @@
       <div class="card__image-container">
         <img
           class="card__image"
-          src="https://images.unsplash.com/photo-1620207418302-439b387441b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=100"
+           src="{{ asset('assets/landing/img/events(2).jpg') }}"
           alt=""
         />
       </div>
       <div class="card__content">
-        <h1 class="card__title">Card Title</h1>
+        <h1 class="card__title">Scholarship Awarding Ceremony</h1>
         <p class="card__description">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dicta
-          error nam eaque. Eum fuga laborum quos expedita iste saepe
-          similique, unde possimus quia at magnam sed cupiditate?
-          Reprehenderit, harum!
+        The Scholarship Awarding Ceremony for the Business & Social English and Frontier Technology Skills courses was held at the open stage field of Barishal University. The event was organized jointly by the Barishal University IT Society and the United Nations Development Programme (UNDP).
         </p>
       </div>
     </div>
@@ -128,17 +125,14 @@
       <div class="card__image-container">
         <img
           class="card__image"
-          src="https://images.unsplash.com/photo-1620207418302-439b387441b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=100"
+          src="{{ asset('assets/landing/img/events(3).jpg') }}"
           alt=""
         />
       </div>
       <div class="card__content">
-        <h1 class="card__title">Card Title</h1>
+        <h1 class="card__title">IT Fest 1.0</h1>
         <p class="card__description">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dicta
-          error nam eaque. Eum fuga laborum quos expedita iste saepe
-          similique, unde possimus quia at magnam sed cupiditate?
-          Reprehenderit, harum!
+        The first-ever IT Fest 1.0 was held at Barishal University. The event was organized by the Barishal University IT Society. The event was a huge success with over 1000 participants from different universities and colleges.
         </p>
       </div>
     </div>
@@ -148,43 +142,22 @@
       <div class="card__image-container">
         <img
           class="card__image"
-          src="https://images.unsplash.com/photo-1620207418302-439b387441b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=100"
+          src="{{ asset('assets/landing/img/events(1).JPG') }}"
           alt=""
         />
       </div>
       <div class="card__content">
-        <h1 class="card__title">Card Title</h1>
+        <h1 class="card__title">it fest Programming contest </h1>
         <p class="card__description">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dicta
-          error nam eaque. Eum fuga laborum quos expedita iste saepe
-          similique, unde possimus quia at magnam sed cupiditate?
-          Reprehenderit, harum!
+        Programming contest was held at Barishal University. The event was organized by the Barishal University IT Society.
         </p>
       </div>
     </div>
   </div>
-  <div class="card" data-index="3">
-    <div class="card__inner">
-      <div class="card__image-container">
-        <img
-          class="card__image"
-          src="https://images.unsplash.com/photo-1620207418302-439b387441b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=100"
-          alt=""
-        />
-      </div>
-      <div class="card__content">
-        <h1 class="card__title">Card Title</h1>
-        <p class="card__description">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dicta
-          error nam eaque. Eum fuga laborum quos expedita iste saepe
-          similique, unde possimus quia at magnam sed cupiditate?
-          Reprehenderit, harum!
-        </p>
-      </div>
-    </div>
-  </div>
+  
 </div>
 <div class="space"></div>
+
 
 @push('scripts')
 <script>
